@@ -27,6 +27,7 @@
     "@nuxt/test-utils": "^4.1.0",
     "@tailwindcss/vite": "^4.3.3",
     "@vue/test-utils": "^2.4.11",
+    "eslint": "^10.8.1",
     "happy-dom": "^20.11.2",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",
