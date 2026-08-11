@@ -7,12 +7,25 @@ defineProps<{
 </script>
 
 <template>
-  <section aria-label="Hero" class="px-6 py-16 text-center">
-    <h1 class="text-4xl font-bold tracking-tight">
-      {{ about?.name }}
-    </h1>
-    <p class="mt-4 text-xl text-gray-600">
-      {{ about?.headline }}
-    </p>
+  <section aria-label="Hero" class="flex min-h-dvh items-center border-b border-neutral-200">
+    <div class="page-container">
+      <p class="font-mono text-sm text-accent">
+        kristian@portfolio:~$ whoami
+      </p>
+      <h1 class="mt-4 max-w-3xl text-5xl font-bold tracking-tight text-neutral-950 md:text-7xl">
+        {{ about?.name }}
+      </h1>
+      <p class="mt-4 max-w-xl text-xl text-neutral-600 md:text-2xl">
+        {{ about?.headline }}
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a v-if="about?.email" :href="`mailto:${about.email}`" class="btn-accent">
+          Escríbeme
+        </a>
+        <a href="#proyectos" class="pill hover:border-neutral-400 hover:text-neutral-900">
+          Ver proyectos
+        </a>
+      </div>
+    </div>
   </section>
 </template>

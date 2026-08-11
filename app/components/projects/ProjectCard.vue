@@ -9,23 +9,26 @@ defineProps<{
 </script>
 
 <template>
-  <article class="rounded-lg border border-gray-200 p-6">
-    <h3 class="text-lg font-semibold">
-      <NuxtLink :to="`/projects/${slug}`" class="hover:underline">
-        {{ title }}
-      </NuxtLink>
-    </h3>
-    <p class="mt-2 text-gray-600">
-      {{ summary }}
-    </p>
-    <ul class="mt-4 flex flex-wrap gap-2">
-      <li
-        v-for="tech in stack"
-        :key="tech"
-        class="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700"
-      >
+  <article
+    class="group flex flex-col justify-between rounded-2xl border border-neutral-200 p-8 transition-colors duration-200 hover:border-accent"
+  >
+    <div>
+      <h3 class="text-2xl font-semibold tracking-tight text-neutral-950">
+        <NuxtLink
+          :to="`/projects/${slug}`"
+          class="transition-colors duration-200 group-hover:text-accent"
+        >
+          {{ title }}
+        </NuxtLink>
+      </h3>
+      <p class="mt-3 text-neutral-600">
+        {{ summary }}
+      </p>
+    </div>
+    <div class="mt-6 flex flex-wrap gap-2">
+      <span v-for="tech in stack" :key="tech" class="pill">
         {{ tech }}
-      </li>
-    </ul>
+      </span>
+    </div>
   </article>
 </template>
