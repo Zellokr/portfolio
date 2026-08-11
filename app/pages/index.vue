@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import NavBar from '~/components/layout/NavBar.vue'
+import AppFooter from '~/components/layout/AppFooter.vue'
 import HeroSection from '~/components/hero/HeroSection.vue'
 import AboutSection from '~/components/about/AboutSection.vue'
 import ContactSection from '~/components/contact/ContactSection.vue'
@@ -17,9 +19,11 @@ useSeoMeta({
 
 <template>
   <div>
+    <NavBar :about="about ?? null" />
     <HeroSection :about="about ?? null" />
     <AboutSection :about="about ?? null" />
     <ProjectGrid :projects="projects ?? []" />
     <ContactSection :about="about ?? null" />
+    <AppFooter :about="about ?? null" />
   </div>
 </template>

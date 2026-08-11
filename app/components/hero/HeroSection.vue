@@ -7,22 +7,25 @@ defineProps<{
 </script>
 
 <template>
-  <section aria-label="Hero" class="flex min-h-dvh items-center border-b border-neutral-200">
+  <section
+    id="top"
+    aria-label="Hero"
+    class="relative flex min-h-dvh items-center overflow-hidden border-b border-slate-800"
+  >
+    <div class="hero-glow" />
     <div class="page-container">
-      <p class="font-mono text-sm text-accent">
-        kristian@portfolio:~$ whoami
-      </p>
-      <h1 class="mt-4 max-w-3xl text-5xl font-bold tracking-tight text-neutral-950 md:text-7xl">
+      <p class="eyebrow">Disponible para nuevos proyectos</p>
+      <h1 class="mt-4 max-w-3xl text-5xl font-black tracking-tight text-white md:text-7xl">
         {{ about?.name }}
       </h1>
-      <p class="mt-4 max-w-xl text-xl text-neutral-600 md:text-2xl">
+      <p class="mt-4 max-w-xl text-xl text-slate-400 md:text-2xl">
         {{ about?.headline }}
       </p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a v-if="about?.email" :href="`mailto:${about.email}`" class="btn-accent">
           Escríbeme
         </a>
-        <a href="#proyectos" class="pill hover:border-neutral-400 hover:text-neutral-900">
+        <a href="#proyectos" class="pill hover:border-accent hover:text-accent">
           Ver proyectos
         </a>
       </div>

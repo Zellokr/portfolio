@@ -7,19 +7,22 @@ defineProps<{
 </script>
 
 <template>
-  <section aria-label="Contact" class="section bg-neutral-950 text-white">
+  <section id="contacto" aria-label="Contact" class="section bg-slate-900">
     <div class="page-container">
-      <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">
-        Hablemos
+      <p class="eyebrow">¿Hablamos?</p>
+      <h2 class="mt-2 text-2xl font-bold tracking-tight text-white md:text-3xl">
+        Contacto
       </h2>
       <p v-if="about?.email" class="mt-4">
-        <a :href="`mailto:${about.email}`" class="link-accent">{{ about.email }}</a>
+        <a :href="`mailto:${about.email}`" class="link-accent text-lg">{{ about.email }}</a>
       </p>
       <ul v-if="about?.socials?.length" class="mt-6 flex flex-wrap gap-3">
         <li v-for="social in about.socials" :key="social.url">
           <a
             :href="social.url"
-            class="pill border-neutral-700 text-neutral-200 hover:border-accent hover:text-accent"
+            class="pill hover:border-accent hover:text-accent"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             {{ social.label }}
           </a>

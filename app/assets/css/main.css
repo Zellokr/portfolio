@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 @theme {
-  --color-accent: oklch(70% 0.19 42);
+  --color-accent: oklch(0.777 0.152 181.912);
 }
 
 @layer base {
   body {
-    @apply bg-white text-neutral-900 antialiased;
+    @apply bg-slate-950 text-slate-300 antialiased;
   }
 }
 
@@ -20,11 +20,15 @@
   }
 
   .section-heading {
-    @apply text-2xl font-semibold tracking-tight text-neutral-950 md:text-3xl;
+    @apply text-2xl font-bold tracking-tight text-white md:text-3xl;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-widest text-accent;
   }
 
   .pill {
-    @apply inline-flex items-center rounded-full border border-neutral-200 px-3 py-1 text-xs font-medium text-neutral-600 transition-colors duration-200;
+    @apply inline-flex items-center rounded-full border border-slate-700 bg-slate-900/60 px-3 py-1 text-xs font-medium text-slate-300 transition-colors duration-200;
   }
 
   .link-accent {
@@ -32,6 +36,22 @@
   }
 
   .btn-accent {
-    @apply inline-flex items-center rounded-md bg-accent px-4 py-2 text-sm font-medium text-neutral-950 transition-colors duration-200 hover:bg-neutral-950 hover:text-white active:scale-[0.98];
+    @apply inline-flex items-center rounded-md bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition-colors duration-200 hover:bg-teal-300 active:scale-[0.98];
+  }
+
+  .icon-btn {
+    @apply flex h-9 w-9 items-center justify-center rounded-lg border border-slate-800 bg-slate-900 text-slate-300 transition-colors duration-200 hover:border-accent hover:text-accent active:scale-[0.98];
+  }
+
+  .nav-link {
+    @apply text-sm font-medium text-slate-300 transition-colors duration-200 hover:text-accent;
+  }
+
+  .hero-glow {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: -10;
+    background: radial-gradient(circle at 15% 20%, oklch(0.7 0.15 180 / 18%), transparent 60%);
   }
 }
