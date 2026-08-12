@@ -23,6 +23,7 @@ const currentYear = new Date().getFullYear();
       <div>
         <p class="eyebrow">Explorar</p>
         <ul class="mt-3 space-y-2 text-sm">
+          <li><NuxtLink to="/" class="nav-link">Inicio</NuxtLink></li>
           <li>
             <NuxtLink to="/proyectos" class="nav-link">Proyectos</NuxtLink>
           </li>
