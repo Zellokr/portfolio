@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import CarViewer from "./CarViewer.client.vue";
+import { defineAsyncComponent, onMounted, ref } from "vue";
 import CarViewerSkeleton from "./CarViewerSkeleton.vue";
+
+const CarViewer = defineAsyncComponent({
+  loader: () => import("./CarViewer.client.vue"),
+  loadingComponent: CarViewerSkeleton,
+});
 
 const visible = ref(false);
 const wrapperEl = ref<HTMLDivElement | null>(null);
@@ -35,8 +39,8 @@ onMounted(() => {
     <div class="page-container">
       <h2 class="section-heading">Mi coche: KIA Rio 2019</h2>
       <p class="mt-3 max-w-2xl text-slate-400">
-        Otra de mis pasiones fuera del código, puedes interactuar con el coche
-        en 3D, rotarlo, hacer zoom y ver los detalles de su interior.
+        Otra de mis pasiones fuera del código, los coches, puedes interactuar
+        con el coche en 3D, rotarlo, hacer zoom y ver los detalles.
       </p>
       <div ref="wrapperEl" class="mt-8">
         <CarViewerSkeleton v-if="!visible" />

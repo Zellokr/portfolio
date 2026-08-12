@@ -6,6 +6,7 @@ defineProps<{
   summary: string;
   stack: string[];
   url: string;
+  slug: string;
   image?: string;
 }>();
 
@@ -66,11 +67,17 @@ onMounted(() => {
           {{ summary }}
         </p>
       </div>
-      <div class="mt-6 flex flex-wrap gap-2">
+      <div class="mt-6 flex flex-wrap items-center gap-2">
         <span v-for="tech in stack" :key="tech" class="pill">
           {{ tech }}
         </span>
       </div>
+      <NuxtLink
+        :to="`/proyectos/${slug}`"
+        class="link-accent mt-4 inline-flex text-sm font-semibold"
+      >
+        Ver detalles →
+      </NuxtLink>
     </div>
   </article>
 </template>

@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from 'vitest'
 import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
 
-const { queryCollectionMock } = vi.hoisted(() => {
+const { queryCollectionMock, routeSlug } = vi.hoisted(() => {
   const aboutFixture = {
     name: 'Kristian Martinez',
     headline: 'Frontend Engineer',
     bio: 'I build accessible, well-tested web applications.',
     email: 'kristian@example.com',
-    socials: [{ label: 'GitHub', url: 'https://github.com/example' }]
+    socials: []
   }
 
   const projectsFixture = [
@@ -25,29 +25,38 @@ const { queryCollectionMock } = vi.hoisted(() => {
   ]
 
   const mock = (collection: string) => {
+    let filterSlug: string | null = null
     const builder = {
       order: () => builder,
+      where: (field: string, _op: string, value: string) => {
+        if (field === 'slug') filterSlug = value
+        return builder
+      },
       all: async () => (collection === 'projects' ? [...projectsFixture] : []),
-      first: async () => (collection === 'about' ? aboutFixture : null)
+      first: async () => {
+        if (collection === 'about') return aboutFixture
+        if (collection === 'projects') return projectsFixture.find(project => project.slug === filterSlug) ?? null
+        return null
+      }
     }
     return builder
   }
 
-  return { queryCollectionMock: vi.fn(mock) }
+  return { queryCollectionMock: vi.fn(mock), routeSlug: { value: 'gameboycss' } }
 })
 
 mockNuxtImport('queryCollection', () => queryCollectionMock)
+mockNuxtImport('useRoute', () => () => ({ params: { slug: routeSlug.value } }))
 
-describe('pages/proyectos.vue', () => {
-  it('renders the projects grid from real content data', async () => {
-    const ProyectosPage = await import('../../app/pages/proyectos/index.vue')
-    const wrapper = await mountSuspended(ProyectosPage.default)
+describe('pages/proyectos/[slug].vue', () => {
+  it('renders the project detail from real content data', async () => {
+    routeSlug.value = 'gameboycss'
+    const ProjectPage = await import('../../app/pages/proyectos/[slug].vue')
+    const wrapper = await mountSuspended(ProjectPage.default)
 
-    // Projects — real migrated content (GameboyCSS)
     expect(wrapper.text()).toContain('GameboyCSS')
+    expect(wrapper.text()).toContain('Vue')
     expect(wrapper.findAll('a[href="https://gameboycsskr.netlify.app"][target="_blank"]').length).toBeGreaterThan(0)
-
-    // Footer — socials from useAbout()
-    expect(wrapper.findAll('a[href="https://github.com/example"]').length).toBeGreaterThan(0)
+    expect(wrapper.find('a[href="/proyectos"]').exists()).toBe(true)
   })
 })

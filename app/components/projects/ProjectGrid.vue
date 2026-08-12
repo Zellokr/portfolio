@@ -18,9 +18,9 @@ defineProps<{
     <div class="hero-glow" />
     <div class="page-container">
       <p class="eyebrow">Proyectos</p>
-      <h2 class="mt-2 text-3xl font-black tracking-tight text-white md:text-5xl">
+      <h1 class="mt-2 text-3xl font-black tracking-tight text-white md:text-5xl">
         Cosas que construyo por diversión
-      </h2>
+      </h1>
       <p class="mt-6 max-w-2xl text-lg leading-relaxed text-slate-300">
         Proyectos personales que hago por diversión y para seguir aprendiendo cosas nuevas.
       </p>
@@ -33,6 +33,7 @@ defineProps<{
           :summary="project.summary"
           :stack="project.stack"
           :url="project.url"
+          :slug="project.slug"
           :image="project.image"
         />
       </div>

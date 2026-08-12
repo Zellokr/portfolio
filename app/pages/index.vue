@@ -20,9 +20,26 @@ const terminalProjects = computed<ProjectRef[]>(() =>
   })),
 );
 
+const siteUrl = useRuntimeConfig().public.siteUrl;
+const canonicalUrl = `${siteUrl}/`;
+const ogImage = `${siteUrl}/kristian.webp`;
+
 useSeoMeta({
   title: () => about.value?.headline ?? "Portfolio",
   description: () => about.value?.bio ?? "",
+  ogTitle: () => about.value?.name ?? "Portfolio",
+  ogDescription: () => about.value?.bio ?? "",
+  ogImage,
+  ogUrl: canonicalUrl,
+  ogType: "website",
+  twitterCard: "summary",
+  twitterTitle: () => about.value?.name ?? "Portfolio",
+  twitterDescription: () => about.value?.bio ?? "",
+  twitterImage: ogImage,
+});
+
+useHead({
+  link: [{ rel: "canonical", href: canonicalUrl }],
 });
 </script>
 

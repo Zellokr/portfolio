@@ -34,10 +34,29 @@ const { data: hobbies, pending: hobbiesPending } = useAsyncData(
   () => useHobbies(),
 );
 
+const siteUrl = useRuntimeConfig().public.siteUrl;
+const canonicalUrl = `${siteUrl}/sobre-mi`;
+const ogImage = `${siteUrl}/kristian.webp`;
+const pageTitle = computed(() =>
+  about.value?.name ? `Sobre mí — ${about.value.name}` : "Sobre mí",
+);
+
 useSeoMeta({
-  title: () =>
-    about.value?.name ? `Sobre mí — ${about.value.name}` : "Sobre mí",
+  title: () => pageTitle.value,
   description: () => about.value?.bio ?? "",
+  ogTitle: () => pageTitle.value,
+  ogDescription: () => about.value?.bio ?? "",
+  ogImage,
+  ogUrl: canonicalUrl,
+  ogType: "profile",
+  twitterCard: "summary",
+  twitterTitle: () => pageTitle.value,
+  twitterDescription: () => about.value?.bio ?? "",
+  twitterImage: ogImage,
+});
+
+useHead({
+  link: [{ rel: "canonical", href: canonicalUrl }],
 });
 </script>
 
