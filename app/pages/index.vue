@@ -2,15 +2,14 @@
 import NavBar from "~/components/layout/NavBar.vue";
 import AppFooter from "~/components/layout/AppFooter.vue";
 import HeroSection from "~/components/hero/HeroSection.vue";
-import ProjectGrid from "~/components/projects/ProjectGrid.vue";
 import { useAbout } from "~/composables/useAbout";
 import { useProjects } from "~/composables/useProjects";
 import type { ProjectRef } from "~/utils/terminal/types";
 
-const { data: about } = await useAsyncData("home-about", () => useAbout());
-const { data: projects } = await useAsyncData("home-projects", () =>
-  useProjects(),
+const { data: about, pending: aboutPending } = useAsyncData("home-about", () =>
+  useAbout(),
 );
+const { data: projects } = useAsyncData("home-projects", () => useProjects());
 
 const terminalProjects = computed<ProjectRef[]>(() =>
   (projects.value ?? []).map((project) => ({
@@ -30,8 +29,11 @@ useSeoMeta({
 <template>
   <div>
     <NavBar :about="about ?? null" />
-    <HeroSection :about="about ?? null" :projects="terminalProjects" />
-    <ProjectGrid :projects="projects ?? []" />
+    <HeroSection
+      :about="about ?? null"
+      :projects="terminalProjects"
+      :pending="aboutPending"
+    />
     <AppFooter :about="about ?? null" />
   </div>
 </template>

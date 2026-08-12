@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import WindowChrome from '~/components/WindowChrome.vue'
 import TerminalApp from '~/components/terminal/TerminalApp.client.vue'
+import TerminalSkeleton from '~/components/terminal/TerminalSkeleton.vue'
 import { useProjects } from '~/composables/useProjects'
 import type { ProjectRef } from '~/utils/terminal/types'
 
@@ -31,9 +32,7 @@ useSeoMeta({ robots: 'noindex, nofollow' })
       <ClientOnly>
         <TerminalApp :projects="projectRefs" />
         <template #fallback>
-          <p class="p-4 font-mono text-sm text-gray-500">
-            Loading terminal…
-          </p>
+          <TerminalSkeleton />
         </template>
       </ClientOnly>
     </WindowChrome>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { agentSchema, projectSchema, technologySchema } from '../../content.schema'
+import { agentSchema, hobbySchema, projectSchema, technologySchema } from '../../content.schema'
 
 describe('projectSchema', () => {
   it('validates real gameboycss project frontmatter', () => {
@@ -121,6 +121,37 @@ describe('agentSchema', () => {
     if (!result.success) {
       const paths = result.error.issues.map(issue => issue.path[0])
       expect(paths).toContain('icon')
+    }
+  })
+})
+
+describe('hobbySchema', () => {
+  it('validates real hobby frontmatter', () => {
+    // Mirrors content/hobbies/videojuegos.md frontmatter.
+    const videojuegosFrontmatter = {
+      name: 'Videojuegos',
+      icon: '🎮',
+      description: 'Pasión por el gaming competitivo, la estrategia y el análisis de mecánicas interactivas.',
+      order: 1
+    }
+
+    const result = hobbySchema.safeParse(videojuegosFrontmatter)
+
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.name).toBe('Videojuegos')
+      expect(result.data.icon).toBe('🎮')
+    }
+  })
+
+  it('fails validation when required fields are missing', () => {
+    const result = hobbySchema.safeParse({ name: 'Videojuegos' })
+
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      const paths = result.error.issues.map(issue => issue.path[0])
+      expect(paths).toContain('icon')
+      expect(paths).toContain('description')
     }
   })
 })

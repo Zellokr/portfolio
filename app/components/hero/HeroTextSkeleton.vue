@@ -1,0 +1,15 @@
+<script setup lang="ts">
+import Skeleton from "~/components/ui/Skeleton.vue";
+</script>
+
+<template>
+  <div data-testid="hero-text-skeleton">
+    <Skeleton class="mt-4 h-12 w-64 md:h-16 md:w-96" />
+    <Skeleton class="mt-4 h-6 w-72 md:h-8 md:w-[28rem]" />
+    <div class="mt-8 flex flex-wrap gap-3">
+      <Skeleton class="h-9 w-28 rounded-md" />
+      <Skeleton class="h-9 w-32 rounded-full" />
+      <Skeleton class="h-9 w-36 rounded-full" />
+    </div>
+  </div>
+</template>

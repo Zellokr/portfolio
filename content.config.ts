@@ -1,5 +1,5 @@
 import { defineCollection, defineContentConfig } from '@nuxt/content'
-import { aboutSchema, agentSchema, projectSchema, technologySchema, timelineEntrySchema } from './content.schema'
+import { aboutSchema, agentSchema, hobbySchema, projectSchema, technologySchema, timelineEntrySchema } from './content.schema'
 
 export default defineContentConfig({
   collections: {
@@ -27,6 +27,11 @@ export default defineContentConfig({
       type: 'page',
       source: 'agents/*.md',
       schema: agentSchema
+    }),
+    hobbies: defineCollection({
+      type: 'page',
+      source: 'hobbies/*.md',
+      schema: hobbySchema
     })
   }
 })

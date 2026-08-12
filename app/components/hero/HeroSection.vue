@@ -4,11 +4,14 @@ import type { About } from "~/composables/useAbout";
 import WindowChrome from "~/components/WindowChrome.vue";
 import TerminalApp from "~/components/terminal/TerminalApp.client.vue";
 import ChatApp from "~/components/chat/ChatApp.client.vue";
+import TerminalSkeleton from "~/components/terminal/TerminalSkeleton.vue";
+import HeroTextSkeleton from "./HeroTextSkeleton.vue";
 import type { ProjectRef } from "~/utils/terminal/types";
 
 defineProps<{
   about: About | null;
   projects: ProjectRef[];
+  pending?: boolean;
 }>();
 
 const mode = ref<"terminal" | "chat">("terminal");
@@ -22,7 +25,8 @@ const mode = ref<"terminal" | "chat">("terminal");
   >
     <div class="hero-glow" />
     <div class="page-container grid items-center gap-12 lg:grid-cols-2 lg:gap-24">
-      <div>
+      <HeroTextSkeleton v-if="pending" />
+      <div v-else>
         <h1
           class="mt-4 text-5xl font-black tracking-tight text-white md:text-7xl"
         >
@@ -39,12 +43,12 @@ const mode = ref<"terminal" | "chat">("terminal");
           >
             Escríbeme
           </a>
-          <a
-            href="#proyectos"
+          <NuxtLink
+            to="/proyectos"
             class="pill hover:border-accent hover:text-accent"
           >
             Ver proyectos
-          </a>
+          </NuxtLink>
           <a
             href="/cv.pdf"
             download="Kristian-Martinez-CV.pdf"
@@ -85,7 +89,7 @@ const mode = ref<"terminal" | "chat">("terminal");
             <TerminalApp v-if="mode === 'terminal'" :projects="projects" />
             <ChatApp v-else />
             <template #fallback>
-              <p class="p-4 font-mono text-sm text-gray-500">Cargando…</p>
+              <TerminalSkeleton />
             </template>
           </ClientOnly>
         </WindowChrome>

@@ -24,7 +24,7 @@ const currentYear = new Date().getFullYear();
         <p class="eyebrow">Explorar</p>
         <ul class="mt-3 space-y-2 text-sm">
           <li>
-            <NuxtLink to="/#proyectos" class="nav-link">Proyectos</NuxtLink>
+            <NuxtLink to="/proyectos" class="nav-link">Proyectos</NuxtLink>
           </li>
           <li><NuxtLink to="/sobre-mi" class="nav-link">Sobre mí</NuxtLink></li>
         </ul>

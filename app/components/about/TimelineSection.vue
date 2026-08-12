@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { TimelineEntry } from '~/composables/useTimeline'
+import TimelineSkeleton from './TimelineSkeleton.vue'
 
 const props = defineProps<{
   entries: TimelineEntry[]
+  pending?: boolean
 }>()
 
 const experience = computed(() => props.entries.filter(entry => entry.category === 'experience'))
@@ -14,7 +16,8 @@ const education = computed(() => props.entries.filter(entry => entry.category ==
   <section id="trayectoria" aria-label="Timeline" class="section border-b border-slate-800">
     <div class="page-container">
       <h2 class="section-heading">Trayectoria</h2>
-      <div class="mt-10 grid gap-12 md:grid-cols-2">
+      <TimelineSkeleton v-if="pending" />
+      <div v-else class="mt-10 grid gap-12 md:grid-cols-2">
         <div>
           <p class="eyebrow flex items-center gap-2">
             <svg viewBox="0 0 20 20" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">

@@ -30,4 +30,13 @@ describe('HeroSection.vue', () => {
     expect(wrapper.find('[data-testid="terminal-input"]').exists()).toBe(false)
     expect(wrapper.find('[data-testid="chat-input"]').exists()).toBe(true)
   })
+
+  it('shows the skeleton while about is pending', async () => {
+    const wrapper = await mountSuspended(HeroSection, {
+      props: { about: null, projects, pending: true }
+    })
+
+    expect(wrapper.find('[data-testid="hero-text-skeleton"]').exists()).toBe(true)
+    expect(wrapper.text()).not.toContain('Kristian Martínez')
+  })
 })

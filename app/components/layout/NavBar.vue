@@ -19,7 +19,8 @@ defineProps<{
         Kristian<span class="text-accent"> Martínez</span>
       </NuxtLink>
       <div class="hidden items-center gap-6 md:flex">
-        <NuxtLink to="/#proyectos" class="nav-link">Proyectos</NuxtLink>
+        <NuxtLink to="/" class="nav-link">Inicio</NuxtLink>
+        <NuxtLink to="/proyectos" class="nav-link">Proyectos</NuxtLink>
         <NuxtLink to="/sobre-mi" class="nav-link">Sobre mí</NuxtLink>
       </div>
       <ul v-if="about?.socials?.length" class="flex items-center gap-2">

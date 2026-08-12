@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { About } from "~/composables/useAbout";
+import AboutSectionSkeleton from "./AboutSectionSkeleton.vue";
 
 defineProps<{
   about: About | null;
+  pending?: boolean;
 }>();
 </script>
 
@@ -15,7 +17,9 @@ defineProps<{
     <div class="hero-glow" />
     <div class="page-container">
       <p class="eyebrow">Sobre mí</p>
+      <AboutSectionSkeleton v-if="pending" />
       <div
+        v-else
         class="mt-6 flex flex-col items-center gap-10 text-center md:flex-row md:items-center md:text-left"
       >
         <img

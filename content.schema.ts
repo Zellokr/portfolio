@@ -53,3 +53,10 @@ export const agentSchema = z.object({
   icon: z.string(),
   order: z.number().default(0)
 })
+
+export const hobbySchema = z.object({
+  name: z.string(),
+  icon: z.string(),
+  description: z.string(),
+  order: z.number().default(0)
+})
