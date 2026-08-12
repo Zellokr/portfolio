@@ -6,6 +6,7 @@ import {
   RATE_LIMIT_WINDOW_MS,
   buildSystemPrompt,
   isRateLimited,
+  isTrustedOrigin,
   validateMessages
 } from '../../server/utils/chat'
 import type { About, Agent, Hobby, Project, Technology, TimelineEntry } from '../../server/utils/chat'
@@ -100,6 +101,37 @@ describe('isRateLimited', () => {
       isRateLimited(log, '1.2.3.4', 1000)
     }
     expect(isRateLimited(log, '1.2.3.4', 1000 + RATE_LIMIT_WINDOW_MS + 1)).toBe(false)
+  })
+})
+
+describe('isTrustedOrigin', () => {
+  it('accepts a matching Origin header', () => {
+    expect(isTrustedOrigin('https://krismart.dev', undefined, 'krismart.dev')).toBe(true)
+  })
+
+  it('falls back to Referer when Origin is missing', () => {
+    expect(isTrustedOrigin(undefined, 'https://krismart.dev/sobre-mi', 'krismart.dev')).toBe(true)
+  })
+
+  it('prefers Origin over Referer when both are present', () => {
+    expect(isTrustedOrigin('https://evil.example', 'https://krismart.dev/', 'krismart.dev')).toBe(false)
+  })
+
+  it('rejects a mismatched host', () => {
+    expect(isTrustedOrigin('https://evil.example', undefined, 'krismart.dev')).toBe(false)
+  })
+
+  it('rejects requests with neither header', () => {
+    expect(isTrustedOrigin(undefined, undefined, 'krismart.dev')).toBe(false)
+  })
+
+  it('rejects a malformed header value instead of throwing', () => {
+    expect(isTrustedOrigin('not-a-url', undefined, 'krismart.dev')).toBe(false)
+  })
+
+  it('matches host including port', () => {
+    expect(isTrustedOrigin('http://localhost:3000', undefined, 'localhost:3000')).toBe(true)
+    expect(isTrustedOrigin('http://localhost:3000', undefined, 'localhost:4000')).toBe(false)
   })
 })
 

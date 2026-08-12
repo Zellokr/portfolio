@@ -1,6 +1,6 @@
 import Groq from 'groq-sdk'
 import { queryCollection } from '@nuxt/content/server'
-import { buildSystemPrompt, isRateLimited, validateMessages } from '../utils/chat'
+import { buildSystemPrompt, isRateLimited, isTrustedOrigin, validateMessages } from '../utils/chat'
 import type { About, Agent, Hobby, Project, Technology, TimelineEntry } from '../utils/chat'
 
 const MODEL = 'openai/gpt-oss-20b'
@@ -11,6 +11,12 @@ const rateLimitLog = new Map<string, number[]>()
 export default defineEventHandler(async (event) => {
   if (!process.env.GROQ_API_KEY) {
     throw createError({ statusCode: 503, statusMessage: 'Chat is not configured.' })
+  }
+
+  const origin = getHeader(event, 'origin')
+  const referer = getHeader(event, 'referer')
+  if (!isTrustedOrigin(origin, referer, getRequestHost(event))) {
+    throw createError({ statusCode: 403, statusMessage: 'Forbidden.' })
   }
 
   const ip = getRequestIP(event, { xForwardedFor: true }) ?? 'unknown'

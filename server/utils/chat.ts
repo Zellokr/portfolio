@@ -31,6 +31,23 @@ export function isRateLimited(log: Map<string, number[]>, id: string, now: numbe
 }
 
 /**
+ * Blocks direct/automated calls to the chat endpoint that don't come from
+ * a page load on this site. Real browser POST requests always send
+ * `Origin`; `Referer` covers the rare client that omits it. Neither header
+ * is attacker-spoofable from a browser, so this filters out plain scripts
+ * hitting the endpoint without going through the UI.
+ */
+export function isTrustedOrigin(originHeader: string | undefined, refererHeader: string | undefined, requestHost: string): boolean {
+  const source = originHeader ?? refererHeader
+  if (!source) return false
+  try {
+    return new URL(source).host === requestHost
+  } catch {
+    return false
+  }
+}
+
+/**
  * Parses and validates an untrusted request body into a well-formed chat
  * history. Returns null (never throws) for anything malformed so callers
  * can respond with a plain 400.
