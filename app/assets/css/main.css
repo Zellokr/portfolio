@@ -54,4 +54,14 @@
     z-index: -10;
     background: radial-gradient(circle at 15% 20%, oklch(0.75 0.17 70 / 18%), transparent 60%);
   }
+
+  .page-enter-active,
+  .page-leave-active {
+    transition: opacity 0.2s ease;
+  }
+
+  .page-enter-from,
+  .page-leave-to {
+    opacity: 0;
+  }
 }

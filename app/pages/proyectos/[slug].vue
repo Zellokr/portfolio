@@ -1,13 +1,9 @@
 <script setup lang="ts">
-import NavBar from "~/components/layout/NavBar.vue";
-import AppFooter from "~/components/layout/AppFooter.vue";
-import { useAbout } from "~/composables/useAbout";
 import { useProject } from "~/composables/useProjects";
 
 const route = useRoute();
 const slug = route.params.slug as string;
 
-const { data: about } = useAsyncData("project-page-about", () => useAbout());
 const { data: project } = await useAsyncData(`project-${slug}`, () =>
   useProject(slug),
 );
@@ -46,11 +42,9 @@ useHead({
 </script>
 
 <template>
-  <div>
-    <NavBar :about="about ?? null" />
-    <section
-      class="section relative overflow-hidden border-b border-slate-800"
-    >
+  <section
+    class="section relative overflow-hidden border-b border-slate-800"
+  >
       <div class="hero-glow" />
       <div class="page-container max-w-4xl">
         <NuxtLink to="/proyectos" class="link-accent text-sm font-medium">
@@ -107,8 +101,6 @@ useHead({
         >
           <ContentRenderer v-if="project" :value="project" />
         </div>
-      </div>
-    </section>
-    <AppFooter :about="about ?? null" />
-  </div>
+    </div>
+  </section>
 </template>

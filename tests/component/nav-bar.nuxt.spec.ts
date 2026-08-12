@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import NavBar from '../../app/components/layout/NavBar.vue'
+import NavBar from '../../app/components/NavBar/NavBar.vue'
 import type { About } from '../../app/composables/useAbout'
 
 const about: About = {

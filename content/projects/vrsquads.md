@@ -6,6 +6,7 @@ description: Plataforma para organizar torneos y ligas amateur de esports en rea
 stack:
   - Nuxt
   - Vue
+  - Convex
 url: https://www.vrsquads.com/
 image: /images/projects/vrsquads.webp
 order: 2

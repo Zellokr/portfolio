@@ -47,7 +47,6 @@ describe('pages/proyectos.vue', () => {
     expect(wrapper.text()).toContain('GameboyCSS')
     expect(wrapper.findAll('a[href="https://gameboycsskr.netlify.app"][target="_blank"]').length).toBeGreaterThan(0)
 
-    // Footer — socials from useAbout()
-    expect(wrapper.findAll('a[href="https://github.com/example"]').length).toBeGreaterThan(0)
+    // NavBar/AppFooter now live in the default layout, not the page — not asserted here.
   })
 })

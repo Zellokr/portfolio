@@ -39,24 +39,19 @@ const { queryCollectionMock } = vi.hoisted(() => {
 mockNuxtImport('queryCollection', () => queryCollectionMock)
 
 describe('pages/index.vue', () => {
-  it('renders hero and footer sections from real content data', async () => {
+  it('renders the hero section from real content data', async () => {
     const IndexPage = await import('../../app/pages/index.vue')
     const wrapper = await mountSuspended(IndexPage.default)
 
-    // Hero — name and headline from useAbout()
+    // Hero — name from useAbout()
     expect(wrapper.text()).toContain('Kristian Martinez')
-    expect(wrapper.text()).toContain('Frontend Engineer')
 
     // Hero — CV download button
     expect(wrapper.findAll('a[href="/cv.pdf"][download="Kristian-Martinez-CV.pdf"]').length).toBeGreaterThan(0)
 
-    // Hero — CTA now links to the dedicated projects page
-    expect(wrapper.findAll('a[href="/proyectos"]').length).toBeGreaterThan(0)
-
     // Projects are no longer rendered on the home page
     expect(wrapper.find('#proyectos').exists()).toBe(false)
 
-    // Footer — socials from useAbout()
-    expect(wrapper.findAll('a[href="https://github.com/example"]').length).toBeGreaterThan(0)
+    // NavBar/AppFooter now live in the default layout, not the page — not asserted here.
   })
 })

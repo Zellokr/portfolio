@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { About } from "~/composables/useAbout";
-import SocialIcon from "./SocialIcon.vue";
+import SocialIcon from "~/components/SocialIcon/SocialIcon.vue";
 
 defineProps<{
   about: About | null;

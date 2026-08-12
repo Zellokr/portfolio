@@ -113,7 +113,6 @@ describe('pages/sobre-mi.vue', () => {
         .length
     ).toBeGreaterThan(0)
 
-    // Footer — socials from useAbout()
-    expect(wrapper.findAll('a[href="https://github.com/example"]').length).toBeGreaterThan(0)
+    // NavBar/AppFooter now live in the default layout, not the page — not asserted here.
   })
 })

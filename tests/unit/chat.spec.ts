@@ -8,7 +8,7 @@ import {
   isRateLimited,
   validateMessages
 } from '../../server/utils/chat'
-import type { About, Agent, Project, Technology, TimelineEntry } from '../../server/utils/chat'
+import type { About, Agent, Hobby, Project, Technology, TimelineEntry } from '../../server/utils/chat'
 
 describe('validateMessages', () => {
   it('accepts a well-formed conversation ending in a user message', () => {
@@ -152,8 +152,12 @@ describe('buildSystemPrompt', () => {
     { name: 'Claude Code', icon: '/tech/claude-code.svg', url: 'https://claude.com/claude-code', order: 1 }
   ]
 
-  it('includes real bio, project, experience, technology and agent data', () => {
-    const prompt = buildSystemPrompt(about, projects, timeline, technologies, agents)
+  const hobbies: Hobby[] = [
+    { name: 'Videojuegos', icon: '🎮', description: 'Pasión por el gaming competitivo.', order: 1 }
+  ]
+
+  it('includes real bio, project, experience, technology, agent and hobby data', () => {
+    const prompt = buildSystemPrompt(about, projects, timeline, technologies, agents, hobbies)
 
     expect(prompt).toContain('Kristian Martínez')
     expect(prompt).toContain('Ingeniero informático.')
@@ -163,10 +167,12 @@ describe('buildSystemPrompt', () => {
     expect(prompt).toContain('Nuxt, Vue')
     expect(prompt).toContain('Agentes de IA que uso para programar')
     expect(prompt).toContain('Claude Code')
+    expect(prompt).toContain('Aficiones')
+    expect(prompt).toContain('Videojuegos')
   })
 
   it('does not mix agents into the technology list', () => {
-    const prompt = buildSystemPrompt(about, projects, timeline, technologies, agents)
+    const prompt = buildSystemPrompt(about, projects, timeline, technologies, agents, hobbies)
     const technologySection = prompt.split('## Tecnologías que uso')[1]?.split('## Agentes de IA')[0] ?? ''
 
     expect(technologySection).not.toContain('Claude Code')
@@ -177,5 +183,12 @@ describe('buildSystemPrompt', () => {
 
     expect(prompt).toContain('Kristian Martínez')
     expect(prompt).toContain('Sin datos.')
+  })
+
+  it('includes rules to stay on topic and refuse offensive or sexual content', () => {
+    const prompt = buildSystemPrompt(about, projects, timeline, technologies, agents, hobbies)
+
+    expect(prompt).toContain('Solo hablas de')
+    expect(prompt.toLowerCase()).toContain('ofensivo')
   })
 })

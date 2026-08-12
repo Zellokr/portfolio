@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
-import WindowChrome from '../../app/components/WindowChrome.vue'
+import WindowChrome from '../../app/components/WindowChrome/WindowChrome.vue'
 
 describe('WindowChrome', () => {
   it('renders the title and the default slot content', () => {

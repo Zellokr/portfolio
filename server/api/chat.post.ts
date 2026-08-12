@@ -1,7 +1,7 @@
 import Groq from 'groq-sdk'
 import { queryCollection } from '@nuxt/content/server'
 import { buildSystemPrompt, isRateLimited, validateMessages } from '../utils/chat'
-import type { About, Agent, Project, Technology, TimelineEntry } from '../utils/chat'
+import type { About, Agent, Hobby, Project, Technology, TimelineEntry } from '../utils/chat'
 
 const MODEL = 'openai/gpt-oss-20b'
 const MAX_TOKENS = 1024
@@ -24,12 +24,13 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Invalid request body.' })
   }
 
-  const [about, projects, timeline, technologies, agents] = await Promise.all([
+  const [about, projects, timeline, technologies, agents, hobbies] = await Promise.all([
     queryCollection(event, 'about').first() as Promise<About | null>,
     queryCollection(event, 'projects').order('order', 'ASC').all() as Promise<Project[]>,
     queryCollection(event, 'timeline').order('order', 'ASC').all() as Promise<TimelineEntry[]>,
     queryCollection(event, 'technologies').order('order', 'ASC').all() as Promise<Technology[]>,
-    queryCollection(event, 'agents').order('order', 'ASC').all() as Promise<Agent[]>
+    queryCollection(event, 'agents').order('order', 'ASC').all() as Promise<Agent[]>,
+    queryCollection(event, 'hobbies').order('order', 'ASC').all() as Promise<Hobby[]>
   ])
 
   const client = new Groq()
@@ -37,7 +38,7 @@ export default defineEventHandler(async (event) => {
     model: MODEL,
     max_tokens: MAX_TOKENS,
     messages: [
-      { role: 'system', content: buildSystemPrompt(about, projects, timeline, technologies, agents) },
+      { role: 'system', content: buildSystemPrompt(about, projects, timeline, technologies, agents, hobbies) },
       ...messages
     ]
   })
