@@ -25,6 +25,7 @@ defineProps<{
         <img
           src="/images/yo.webp"
           :alt="about?.name ? `Foto de ${about.name}` : 'Foto de perfil'"
+          fetchpriority="high"
           class="h-40 w-40 shrink-0 rounded-full border-2 border-accent/30 object-cover transition-transform duration-300 hover:scale-105 sm:h-48 sm:w-48"
         >
         <div>

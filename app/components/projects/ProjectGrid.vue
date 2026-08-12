@@ -27,7 +27,7 @@ defineProps<{
       <ProjectGridSkeleton v-if="pending" class="mt-8" />
       <div v-else class="mt-8 grid gap-6 md:grid-cols-2">
         <ProjectCard
-          v-for="project in projects"
+          v-for="(project, index) in projects"
           :key="project.slug"
           :title="project.title"
           :summary="project.summary"
@@ -35,6 +35,7 @@ defineProps<{
           :url="project.url"
           :slug="project.slug"
           :image="project.image"
+          :priority="index < 2"
         />
       </div>
     </div>

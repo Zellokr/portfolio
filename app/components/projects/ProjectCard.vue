@@ -8,6 +8,7 @@ defineProps<{
   url: string;
   slug: string;
   image?: string;
+  priority?: boolean;
 }>();
 
 const imageFailed = ref(false);
@@ -37,6 +38,8 @@ onMounted(() => {
         ref="imageEl"
         :src="image"
         :alt="`Captura de ${title}`"
+        :loading="priority ? undefined : 'lazy'"
+        :fetchpriority="priority ? 'high' : undefined"
         class="h-full w-full object-cover object-top transition-transform duration-300"
         @error="imageFailed = true"
       >

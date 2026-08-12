@@ -92,6 +92,7 @@ useHead({
           <img
             :src="project.image"
             :alt="`Captura de ${project.title}`"
+            loading="lazy"
             class="aspect-video w-full object-cover object-top"
           >
         </div>

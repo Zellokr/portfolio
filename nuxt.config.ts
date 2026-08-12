@@ -16,10 +16,7 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: {
         lang: 'es'
-      },
-      link: [
-        { rel: 'prefetch', href: '/models/kia_rio.glb', as: 'fetch', crossorigin: 'anonymous' }
-      ]
+      }
     }
   },
   vite: {

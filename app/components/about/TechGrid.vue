@@ -23,6 +23,7 @@ defineProps<{
       <img
         :src="tech.icon"
         :alt="tech.name"
+        loading="lazy"
         class="h-12 w-12 transition-transform duration-300 group-hover:scale-110"
       >
       <span class="text-sm font-medium text-slate-300">{{ tech.name }}</span>
