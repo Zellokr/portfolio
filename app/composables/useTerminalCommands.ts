@@ -23,7 +23,7 @@ export function useTerminalCommands(session: TerminalSession, projects: ProjectR
 
   function openUrl(url: string): void {
     if (!isAllowedUrl(url)) {
-      appendLine(session, 'error', [`open: refusing to open unsupported url: ${url}`])
+      appendLine(session, 'error', [`pnpm run: refusing to open unsupported url: ${url}`])
       return
     }
     window.open(url, '_blank', 'noopener,noreferrer')

@@ -14,8 +14,8 @@ function currentProjectSlug(cwd: string): string | undefined {
 
 /**
  * Builds the terminal command registry. Pure factory: it closes over the
- * `projects` list it receives so `ls`/`cd`/`open` are always driven by the
- * real project data instead of a hardcoded list, and `help` is generated
+ * `projects` list it receives so `ls`/`cd`/`pnpm run` are always driven by
+ * the real project data instead of a hardcoded list, and `help` is generated
  * from the registry array itself so its output can never drift from the
  * actual set of registered commands.
  */
@@ -69,16 +69,21 @@ export function buildCommands(projects: ProjectRef[]): Command[] {
     }
   }
 
-  const openCommand: Command = {
-    name: 'open',
-    usage: '[slug]',
+  const pnpmCommand: Command = {
+    name: 'pnpm',
+    usage: 'run [slug]',
     describe: 'Open a project url in a new tab',
     run: (ctx: CommandContext, args: string[]) => {
-      const slug = args[0] ?? currentProjectSlug(ctx.session.cwd)
+      if (args[0] !== 'run') {
+        appendLine(ctx.session, 'error', ['pnpm: unknown script, did you mean "pnpm run"?'])
+        return
+      }
+
+      const slug = args[1] ?? currentProjectSlug(ctx.session.cwd)
       const project = slug ? projects.find(candidate => candidate.slug === slug) : undefined
 
       if (!project) {
-        appendLine(ctx.session, 'error', ['open: no project to open'])
+        appendLine(ctx.session, 'error', ['pnpm run: no project to open'])
         return
       }
 
@@ -95,7 +100,7 @@ export function buildCommands(projects: ProjectRef[]): Command[] {
     }
   }
 
-  commands.push(helpCommand, lsCommand, cdCommand, openCommand, clearCommand)
+  commands.push(helpCommand, lsCommand, cdCommand, pnpmCommand, clearCommand)
 
   return commands
 }

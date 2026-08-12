@@ -38,7 +38,7 @@ describe('useTerminalCommands', () => {
     const { session } = useTerminalSession()
     const { dispatch } = useTerminalCommands(session, projects)
 
-    dispatch('open', ['cv'])
+    dispatch('pnpm', ['run', 'cv'])
 
     expect(openSpy).toHaveBeenCalledWith('https://zellokrcv.netlify.app', '_blank', 'noopener,noreferrer')
   })
@@ -52,7 +52,7 @@ describe('useTerminalCommands', () => {
     ]
     const { dispatch } = useTerminalCommands(session, maliciousProjects)
 
-    expect(() => dispatch('open', ['evil'])).not.toThrow()
+    expect(() => dispatch('pnpm', ['run', 'evil'])).not.toThrow()
 
     expect(openSpy).not.toHaveBeenCalled()
     expect(session.lines.some(line => line.kind === 'error')).toBe(true)

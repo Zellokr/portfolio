@@ -29,11 +29,11 @@ function makeContext(): CommandContext {
 }
 
 describe('buildCommands', () => {
-  it('registers help, ls, cd, open and clear', () => {
+  it('registers help, ls, cd, pnpm and clear', () => {
     const commands = buildCommands(projects)
     const names = commands.map(cmd => cmd.name)
 
-    expect(names).toEqual(expect.arrayContaining(['help', 'ls', 'cd', 'open', 'clear']))
+    expect(names).toEqual(expect.arrayContaining(['help', 'ls', 'cd', 'pnpm', 'clear']))
   })
 
   it('help lists every registered command name and description, generated from the registry', () => {
@@ -117,30 +117,41 @@ describe('buildCommands', () => {
     expect(ctx.session.cwd).toBe('~')
   })
 
-  it('open <slug> resolves the given project and calls openUrl with its url', () => {
+  it('pnpm run <slug> resolves the given project and calls openUrl with its url', () => {
     const commands = buildCommands(projects)
     const ctx = makeContext()
 
-    commands.find(cmd => cmd.name === 'open')!.run(ctx, ['gameboycss'])
+    commands.find(cmd => cmd.name === 'pnpm')!.run(ctx, ['run', 'gameboycss'])
 
     expect(ctx.openUrl).toHaveBeenCalledWith('https://gameboycsskr.netlify.app')
   })
 
-  it('open with no slug resolves the current project from cwd', () => {
+  it('pnpm run with no slug resolves the current project from cwd', () => {
     const commands = buildCommands(projects)
     const ctx = makeContext()
     commands.find(cmd => cmd.name === 'cd')!.run(ctx, ['cv'])
 
-    commands.find(cmd => cmd.name === 'open')!.run(ctx, [])
+    commands.find(cmd => cmd.name === 'pnpm')!.run(ctx, ['run'])
 
     expect(ctx.openUrl).toHaveBeenCalledWith('https://zellokrcv.netlify.app')
   })
 
-  it('open with no slug and no current project appends an error line and does not throw', () => {
+  it('pnpm run with no slug and no current project appends an error line and does not throw', () => {
     const commands = buildCommands(projects)
     const ctx = makeContext()
 
-    expect(() => commands.find(cmd => cmd.name === 'open')!.run(ctx, [])).not.toThrow()
+    expect(() => commands.find(cmd => cmd.name === 'pnpm')!.run(ctx, ['run'])).not.toThrow()
+
+    expect(ctx.openUrl).not.toHaveBeenCalled()
+    expect(ctx.session.lines).toHaveLength(1)
+    expect(ctx.session.lines[0].kind).toBe('error')
+  })
+
+  it('pnpm without the "run" subcommand appends an error line and does not throw', () => {
+    const commands = buildCommands(projects)
+    const ctx = makeContext()
+
+    expect(() => commands.find(cmd => cmd.name === 'pnpm')!.run(ctx, ['gameboycss'])).not.toThrow()
 
     expect(ctx.openUrl).not.toHaveBeenCalled()
     expect(ctx.session.lines).toHaveLength(1)
