@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-accent: oklch(0.777 0.152 181.912);
+  --color-accent: oklch(0.78 0.17 70);
 }
 
 @layer base {
@@ -36,7 +36,7 @@
   }
 
   .btn-accent {
-    @apply inline-flex items-center rounded-md bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition-colors duration-200 hover:bg-teal-300 active:scale-[0.98];
+    @apply inline-flex items-center rounded-md bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition-colors duration-200 hover:bg-amber-300 active:scale-[0.98];
   }
 
   .icon-btn {
@@ -52,6 +52,6 @@
     position: absolute;
     inset: 0;
     z-index: -10;
-    background: radial-gradient(circle at 15% 20%, oklch(0.7 0.15 180 / 18%), transparent 60%);
+    background: radial-gradient(circle at 15% 20%, oklch(0.75 0.17 70 / 18%), transparent 60%);
   }
 }

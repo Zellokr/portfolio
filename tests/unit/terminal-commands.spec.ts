@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { buildCommands, runCommand } from '../../app/utils/terminal/commands'
 import { createSession } from '../../app/utils/terminal/session'
+import { WELCOME_LINES } from '../../app/utils/terminal/welcome'
 import type { CommandContext, ProjectRef } from '../../app/utils/terminal/types'
 
 const projects: ProjectRef[] = [
@@ -49,7 +50,7 @@ describe('buildCommands', () => {
     }
   })
 
-  it('ls lists project slugs and titles from the projects array passed in, not hardcoded', () => {
+  it('ls lists project slugs from the projects array passed in, not hardcoded', () => {
     const commands = buildCommands(projects)
     const ctx = makeContext()
 
@@ -57,8 +58,7 @@ describe('buildCommands', () => {
 
     expect(ctx.session.lines).toHaveLength(1)
     const [line] = ctx.session.lines
-    expect(line.text.some(row => row.includes('gameboycss') && row.includes('GameboyCSS'))).toBe(true)
-    expect(line.text.some(row => row.includes('cv') && row.includes('CV'))).toBe(true)
+    expect(line.text).toEqual(['gameboycss', 'cv'])
   })
 
   it('ls reflects a different projects array without any code change', () => {
@@ -147,15 +147,17 @@ describe('buildCommands', () => {
     expect(ctx.session.lines[0].kind).toBe('error')
   })
 
-  it('clear empties the session lines', () => {
+  it('clear empties the session lines and restores the welcome banner', () => {
     const commands = buildCommands(projects)
     const ctx = makeContext()
     commands.find(cmd => cmd.name === 'ls')!.run(ctx, [])
-    expect(ctx.session.lines.length).toBeGreaterThan(0)
+    const linesBeforeClear = ctx.session.lines.length
+    expect(linesBeforeClear).toBeGreaterThan(0)
 
     commands.find(cmd => cmd.name === 'clear')!.run(ctx, [])
 
-    expect(ctx.session.lines).toEqual([])
+    expect(ctx.session.lines).toHaveLength(1)
+    expect(ctx.session.lines[0].text).toEqual(WELCOME_LINES)
   })
 })
 

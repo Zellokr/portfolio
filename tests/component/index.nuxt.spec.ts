@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
 import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
-import { clearNuxtData } from '#app'
 
 const { queryCollectionMock } = vi.hoisted(() => {
   const aboutFixture = {
@@ -19,17 +18,8 @@ const { queryCollectionMock } = vi.hoisted(() => {
       description: 'Aplicación para mostrar una Gameboy hecha con Vue y CSS puro, sin librerías de diseño externas.',
       stack: ['Vue', 'CSS'],
       url: 'https://gameboycsskr.netlify.app',
+      image: '/gameboycss.webp',
       order: 1,
-      featured: false
-    },
-    {
-      title: 'CV',
-      slug: 'cv',
-      summary: 'Currículum personal hecho con Vue.',
-      description: 'Currículum personal hecho con Vue, pensado como una alternativa interactiva a un CV tradicional en PDF.',
-      stack: ['Vue'],
-      url: 'https://zellokrcv.netlify.app',
-      order: 2,
       featured: false
     }
   ]
@@ -49,7 +39,7 @@ const { queryCollectionMock } = vi.hoisted(() => {
 mockNuxtImport('queryCollection', () => queryCollectionMock)
 
 describe('pages/index.vue', () => {
-  it('renders hero, about, projects and contact sections from real content data', async () => {
+  it('renders hero and projects sections from real content data', async () => {
     const IndexPage = await import('../../app/pages/index.vue')
     const wrapper = await mountSuspended(IndexPage.default)
 
@@ -57,45 +47,14 @@ describe('pages/index.vue', () => {
     expect(wrapper.text()).toContain('Kristian Martinez')
     expect(wrapper.text()).toContain('Frontend Engineer')
 
-    // About — bio from useAbout()
-    expect(wrapper.text()).toContain('I build accessible, well-tested web applications.')
+    // Hero — CV download button
+    expect(wrapper.findAll('a[href="/cv.pdf"][download="Kristian-Martinez-CV.pdf"]').length).toBeGreaterThan(0)
 
-    // Projects — real migrated content (GameboyCSS/CV)
+    // Projects — real migrated content (GameboyCSS)
     expect(wrapper.text()).toContain('GameboyCSS')
-    expect(wrapper.text()).toContain('CV')
-    expect(wrapper.findAll('a[href="/projects/gameboycss"]').length).toBeGreaterThan(0)
-    expect(wrapper.findAll('a[href="/projects/cv"]').length).toBeGreaterThan(0)
+    expect(wrapper.findAll('a[href="https://gameboycsskr.netlify.app"][target="_blank"]').length).toBeGreaterThan(0)
 
-    // Contact — email from useAbout()
-    expect(wrapper.text()).toContain('kristian@example.com')
+    // Footer — socials from useAbout()
     expect(wrapper.findAll('a[href="https://github.com/example"]').length).toBeGreaterThan(0)
-
-    // Projects render in the order provided by useProjects() (order: 1 before order: 2)
-    const projectLinks = wrapper.findAll('a[href^="/projects/"]')
-    const hrefs = projectLinks.map(link => link.attributes('href'))
-    expect(hrefs.indexOf('/projects/gameboycss')).toBeLessThan(hrefs.indexOf('/projects/cv'))
-  })
-
-  it('omits the socials list when useAbout() returns no socials', async () => {
-    clearNuxtData(['home-about', 'home-projects'])
-    queryCollectionMock.mockImplementationOnce((collection: string) => ({
-      order: () => ({ all: async () => [] }),
-      all: async () => [],
-      first: async () =>
-        collection === 'about'
-          ? {
-              name: 'Kristian Martinez',
-              headline: 'Frontend Engineer',
-              bio: 'I build accessible, well-tested web applications.',
-              email: 'kristian@example.com',
-              socials: []
-            }
-          : null
-    }))
-
-    const IndexPage = await import('../../app/pages/index.vue')
-    const wrapper = await mountSuspended(IndexPage.default)
-
-    expect(wrapper.find('section[aria-label="Contact"] ul').exists()).toBe(false)
   })
 })

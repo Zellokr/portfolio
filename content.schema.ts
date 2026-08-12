@@ -17,6 +17,7 @@ export const projectSchema = z.object({
   description: z.string(),
   stack: z.array(z.string()),
   url: z.string().url(),
+  image: z.string().optional(),
   repo: z.string().url().optional(),
   order: z.number().default(0),
   featured: z.boolean().default(false)
@@ -29,4 +30,26 @@ export const aboutSchema = z.object({
   email: z.string(),
   location: z.string().optional(),
   socials: z.array(z.object({ label: z.string(), url: z.string().url() })).default([])
+})
+
+export const timelineEntrySchema = z.object({
+  title: z.string(),
+  organization: z.string(),
+  period: z.string(),
+  category: z.enum(['experience', 'education']),
+  description: z.string().optional(),
+  url: z.string().url().optional(),
+  order: z.number().default(0)
+})
+
+export const technologySchema = z.object({
+  name: z.string(),
+  icon: z.string(),
+  order: z.number().default(0)
+})
+
+export const agentSchema = z.object({
+  name: z.string(),
+  icon: z.string(),
+  order: z.number().default(0)
 })

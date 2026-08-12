@@ -1,5 +1,6 @@
 import { appendLine } from './session'
 import type { Command, CommandContext, ProjectRef } from './types'
+import { WELCOME_LINES } from './welcome'
 
 const PROJECT_PATH_PREFIX = '~/projects/'
 
@@ -41,7 +42,7 @@ export function buildCommands(projects: ProjectRef[]): Command[] {
         appendLine(ctx.session, 'output', ['No projects found.'])
         return
       }
-      const lines = projects.map(project => `${project.slug}  ${project.title}`)
+      const lines = projects.map(project => project.slug)
       appendLine(ctx.session, 'output', lines)
     }
   }
@@ -90,6 +91,7 @@ export function buildCommands(projects: ProjectRef[]): Command[] {
     describe: 'Clear the terminal output',
     run: (ctx: CommandContext) => {
       ctx.session.lines.length = 0
+      appendLine(ctx.session, 'output', WELCOME_LINES)
     }
   }
 

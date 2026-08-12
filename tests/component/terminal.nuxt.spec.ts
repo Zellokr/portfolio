@@ -32,9 +32,9 @@ describe('TerminalApp.client.vue', () => {
     await typeAndSubmit(wrapper, 'ls')
 
     expect(wrapper.text()).toContain('gameboycss')
-    expect(wrapper.text()).toContain('GameboyCSS')
     expect(wrapper.text()).toContain('cv')
-    expect(wrapper.text()).toContain('CV')
+    expect(wrapper.text()).not.toContain('Aplicación para mostrar una Gameboy hecha con Vue y CSS puro.')
+    expect(wrapper.text()).not.toContain('Currículum personal hecho con Vue.')
   })
 
   it('shows an error line for an unknown command and does not throw or crash', async () => {

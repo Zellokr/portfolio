@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref, watch } from 'vue'
 import TerminalOutput from './TerminalOutput.vue'
 import { useTerminalSession } from '~/composables/useTerminalSession'
 import { useTerminalCommands } from '~/composables/useTerminalCommands'
 import { parse } from '~/utils/terminal/parser'
+import { WELCOME_LINES } from '~/utils/terminal/welcome'
 import type { ProjectRef } from '~/utils/terminal/types'
 
 const props = defineProps<{ projects: ProjectRef[] }>()
@@ -18,9 +19,17 @@ const { dispatch } = useTerminalCommands(session, props.projects)
 
 const inputValue = ref('')
 const inputEl = ref<HTMLInputElement | null>(null)
+const outputRef = ref<InstanceType<typeof TerminalOutput> | null>(null)
 
 function focusInput(): void {
   inputEl.value?.focus()
+}
+
+function scrollToBottom(): void {
+  const el = outputRef.value?.containerEl
+  if (el) {
+    el.scrollTop = el.scrollHeight
+  }
 }
 
 function submit(): void {
@@ -36,23 +45,32 @@ function submit(): void {
   nextTick(focusInput)
 }
 
-onMounted(focusInput)
+watch(
+  () => session.lines.length,
+  () => nextTick(scrollToBottom),
+)
+
+onMounted(() => {
+  appendLine('output', WELCOME_LINES)
+  focusInput()
+})
 </script>
 
 <template>
   <div
-    class="flex h-full min-h-[16rem] flex-col gap-2 p-4 font-mono text-sm"
+    class="flex h-[26rem] flex-col gap-2 p-4 font-mono text-sm"
     @click="focusInput"
   >
-    <TerminalOutput :lines="session.lines" />
+    <TerminalOutput ref="outputRef" :lines="session.lines" />
     <div class="flex items-center gap-2">
-      <span class="text-gray-500">{{ session.cwd }} $</span>
+      <span class="shrink-0 text-gray-500">{{ session.cwd }} $</span>
       <input
         ref="inputEl"
         v-model="inputValue"
         data-testid="terminal-input"
         type="text"
         class="flex-1 bg-transparent text-gray-100 outline-none"
+        placeholder="escribe 'help'…"
         autocomplete="off"
         autocapitalize="off"
         spellcheck="false"

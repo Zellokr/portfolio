@@ -1,16 +1,12 @@
 <script setup lang="ts">
-import type { About } from '~/composables/useAbout'
-import SocialIcon from './SocialIcon.vue'
+import type { About } from "~/composables/useAbout";
+import SocialIcon from "./SocialIcon.vue";
 
 defineProps<{
-  about: About | null
-}>()
+  about: About | null;
+}>();
 
-const currentYear = new Date().getFullYear()
-
-function scrollToTop() {
-  document.getElementById('top')?.scrollIntoView({ behavior: 'smooth' })
-}
+const currentYear = new Date().getFullYear();
 </script>
 
 <template>
@@ -18,7 +14,7 @@ function scrollToTop() {
     <div class="page-container grid gap-10 py-12 md:grid-cols-3">
       <div>
         <p class="text-lg font-bold tracking-tight text-white">
-          Kristian<span class="text-accent">Martínez</span>
+          Kristian<span class="text-accent"> Martínez</span>
         </p>
         <p class="mt-2 max-w-xs text-sm text-slate-400">
           {{ about?.headline }}
@@ -27,9 +23,10 @@ function scrollToTop() {
       <div>
         <p class="eyebrow">Explorar</p>
         <ul class="mt-3 space-y-2 text-sm">
-          <li><a href="#proyectos" class="nav-link">Proyectos</a></li>
-          <li><a href="#sobre-mi" class="nav-link">Sobre mí</a></li>
-          <li><a href="#contacto" class="nav-link">Contacto</a></li>
+          <li>
+            <NuxtLink to="/#proyectos" class="nav-link">Proyectos</NuxtLink>
+          </li>
+          <li><NuxtLink to="/sobre-mi" class="nav-link">Sobre mí</NuxtLink></li>
         </ul>
       </div>
       <div>
@@ -50,11 +47,10 @@ function scrollToTop() {
       </div>
     </div>
     <div class="border-t border-slate-800 py-6">
-      <div class="page-container flex flex-col items-center justify-between gap-3 text-xs text-slate-500 md:flex-row">
+      <div
+        class="page-container flex flex-col items-center justify-between gap-3 text-xs text-slate-500 md:flex-row"
+      >
         <p>&copy; {{ currentYear }} Kristian Martínez</p>
-        <button type="button" class="nav-link" @click="scrollToTop">
-          Volver arriba &uarr;
-        </button>
       </div>
     </div>
   </footer>
