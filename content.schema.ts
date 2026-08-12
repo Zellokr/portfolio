@@ -45,12 +45,14 @@ export const timelineEntrySchema = z.object({
 export const technologySchema = z.object({
   name: z.string(),
   icon: z.string(),
+  url: z.string().url(),
   order: z.number().default(0)
 })
 
 export const agentSchema = z.object({
   name: z.string(),
   icon: z.string(),
+  url: z.string().url(),
   order: z.number().default(0)
 })
 

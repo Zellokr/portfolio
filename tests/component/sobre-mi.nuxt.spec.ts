@@ -38,19 +38,19 @@ const { queryCollectionMock } = vi.hoisted(() => {
   ]
 
   const technologiesFixture = [
-    { name: 'Nuxt', icon: '/tech/nuxt.svg', order: 1 },
-    { name: 'Vue', icon: '/tech/vue.svg', order: 2 },
-    { name: 'TypeScript', icon: '/tech/typescript.svg', order: 3 },
-    { name: 'Python', icon: '/tech/python.svg', order: 4 },
-    { name: 'Convex', icon: '/tech/convex.svg', order: 5 },
-    { name: 'Docker', icon: '/tech/docker.svg', order: 6 }
+    { name: 'Nuxt', icon: '/tech/nuxt.svg', url: 'https://nuxt.com', order: 1 },
+    { name: 'Vue', icon: '/tech/vue.svg', url: 'https://vuejs.org', order: 2 },
+    { name: 'TypeScript', icon: '/tech/typescript.svg', url: 'https://www.typescriptlang.org', order: 3 },
+    { name: 'Python', icon: '/tech/python.svg', url: 'https://www.python.org', order: 4 },
+    { name: 'Convex', icon: '/tech/convex.svg', url: 'https://www.convex.dev', order: 5 },
+    { name: 'Docker', icon: '/tech/docker.svg', url: 'https://www.docker.com', order: 6 }
   ]
 
   const agentsFixture = [
-    { name: 'Claude Code', icon: '/tech/claude-code.svg', order: 1 },
-    { name: 'Codex', icon: '/tech/codex.svg', order: 2 },
-    { name: 'Pi', icon: '/tech/pi.svg', order: 3 },
-    { name: 'OpenCode', icon: '/tech/opencode.svg', order: 4 }
+    { name: 'Claude Code', icon: '/tech/claude-code.svg', url: 'https://claude.com/claude-code', order: 1 },
+    { name: 'Codex', icon: '/tech/codex.svg', url: 'https://openai.com/codex/', order: 2 },
+    { name: 'Pi', icon: '/tech/pi.svg', url: 'https://pi.dev/', order: 3 },
+    { name: 'OpenCode', icon: '/tech/opencode.svg', url: 'https://opencode.ai', order: 4 }
   ]
 
   const mock = (collection: string) => {

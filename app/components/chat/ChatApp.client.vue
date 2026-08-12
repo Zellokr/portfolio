@@ -104,12 +104,17 @@ onMounted(focusInput)
       <p v-if="isSending" class="text-gray-500">Escribiendo…</p>
       <p v-if="errorText" class="text-red-400">{{ errorText }}</p>
     </div>
-    <p data-testid="chat-usage" class="text-xs text-gray-500">
-      <span v-if="limitReached">
-        Has alcanzado el límite de {{ MESSAGE_LIMIT }} mensajes. Podrás escribir de nuevo el {{ resetLabel }}.
-      </span>
-      <span v-else>{{ remaining }} de {{ MESSAGE_LIMIT }} mensajes restantes</span>
-    </p>
+    <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs text-gray-500">
+      <p data-testid="chat-usage">
+        <span v-if="limitReached">
+          Has alcanzado el límite de {{ MESSAGE_LIMIT }} mensajes. Podrás escribir de nuevo el {{ resetLabel }}.
+        </span>
+        <span v-else>{{ remaining }} de {{ MESSAGE_LIMIT }} mensajes restantes</span>
+      </p>
+      <p data-testid="chat-disclaimer" class="text-slate-600">
+        Respuestas generadas por IA, pueden contener errores.
+      </p>
+    </div>
     <div class="flex items-center gap-2 border-t border-slate-800 pt-3">
       <input
         ref="inputEl"

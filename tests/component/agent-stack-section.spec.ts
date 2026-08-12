@@ -4,7 +4,7 @@ import AgentStackSection from '../../app/components/about/AgentStackSection.vue'
 import type { Agent } from '../../app/composables/useAgents'
 
 const agents: Agent[] = [
-  { name: 'Claude Code', icon: '/tech/claude-code.svg', order: 1 }
+  { name: 'Claude Code', icon: '/tech/claude-code.svg', url: 'https://claude.com/claude-code', order: 1 }
 ]
 
 describe('AgentStackSection.vue', () => {

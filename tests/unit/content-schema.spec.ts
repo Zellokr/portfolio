@@ -73,6 +73,7 @@ describe('technologySchema', () => {
     const nuxtFrontmatter = {
       name: 'Nuxt',
       icon: '/tech/nuxt.svg',
+      url: 'https://nuxt.com',
       order: 1
     }
 
@@ -102,6 +103,7 @@ describe('agentSchema', () => {
     const claudeCodeFrontmatter = {
       name: 'Claude Code',
       icon: '/tech/claude-code.svg',
+      url: 'https://claude.com/claude-code',
       order: 1
     }
 

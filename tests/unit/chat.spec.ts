@@ -144,12 +144,12 @@ describe('buildSystemPrompt', () => {
   ]
 
   const technologies: Technology[] = [
-    { name: 'Nuxt', icon: '/tech/nuxt.svg', order: 1 },
-    { name: 'Vue', icon: '/tech/vue.svg', order: 2 }
+    { name: 'Nuxt', icon: '/tech/nuxt.svg', url: 'https://nuxt.com', order: 1 },
+    { name: 'Vue', icon: '/tech/vue.svg', url: 'https://vuejs.org', order: 2 }
   ]
 
   const agents: Agent[] = [
-    { name: 'Claude Code', icon: '/tech/claude-code.svg', order: 1 }
+    { name: 'Claude Code', icon: '/tech/claude-code.svg', url: 'https://claude.com/claude-code', order: 1 }
   ]
 
   it('includes real bio, project, experience, technology and agent data', () => {

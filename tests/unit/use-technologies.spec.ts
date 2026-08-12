@@ -3,8 +3,8 @@ import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 
 const { queryCollectionMock } = vi.hoisted(() => {
   const technologiesFixture = [
-    { name: 'Vue', icon: '/tech/vue.svg', order: 2 },
-    { name: 'Nuxt', icon: '/tech/nuxt.svg', order: 1 }
+    { name: 'Vue', icon: '/tech/vue.svg', url: 'https://vuejs.org', order: 2 },
+    { name: 'Nuxt', icon: '/tech/nuxt.svg', url: 'https://nuxt.com', order: 1 }
   ]
 
   const mock = (_collection: string) => {

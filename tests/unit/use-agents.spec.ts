@@ -3,8 +3,8 @@ import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 
 const { queryCollectionMock } = vi.hoisted(() => {
   const agentsFixture = [
-    { name: 'Codex', icon: '/tech/codex.svg', order: 2 },
-    { name: 'Claude Code', icon: '/tech/claude-code.svg', order: 1 }
+    { name: 'Codex', icon: '/tech/codex.svg', url: 'https://openai.com/codex/', order: 2 },
+    { name: 'Claude Code', icon: '/tech/claude-code.svg', url: 'https://claude.com/claude-code', order: 1 }
   ]
 
   const mock = (_collection: string) => {
