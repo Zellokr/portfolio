@@ -45,18 +45,48 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.11
         version: 2.4.11(@vue/compiler-dom@3.5.41)(@vue/server-renderer@3.5.41)(vue@3.5.41(typescript@5.9.3))
+      debug:
+        specifier: ^4.4.3
+        version: 4.4.3(supports-color@10.2.2)
       eslint:
         specifier: ^10.8.1
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      extend:
+        specifier: ^3.0.2
+        version: 3.0.2
       happy-dom:
         specifier: ^20.11.2
         version: 20.11.2
+      parse5:
+        specifier: ^8.0.1
+        version: 8.0.1
+      rehype-raw:
+        specifier: ^7.0.0
+        version: 7.0.0
+      remark-emoji:
+        specifier: ^5.0.2
+        version: 5.0.2
+      remark-gfm:
+        specifier: ^4.0.1
+        version: 4.0.1(supports-color@10.2.2)
+      remark-mdc:
+        specifier: ^3.11.1
+        version: 3.11.1(supports-color@10.2.2)
+      remark-rehype:
+        specifier: ^11.1.2
+        version: 11.1.2
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      unified:
+        specifier: ^11.0.5
+        version: 11.0.5
+      unist-util-visit:
+        specifier: ^5.1.0
+        version: 5.1.0
       vitest:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@26.2.0)(happy-dom@20.11.2)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))
