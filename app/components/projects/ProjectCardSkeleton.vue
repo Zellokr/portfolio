@@ -7,7 +7,7 @@ import Skeleton from "~/components/ui/Skeleton.vue";
     class="flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/50"
     data-testid="project-card-skeleton"
   >
-    <Skeleton class="h-72 w-full rounded-none" />
+    <Skeleton class="aspect-video w-full rounded-none" />
     <div class="flex flex-1 flex-col justify-between p-6">
       <div>
         <Skeleton class="h-6 w-2/3" />

@@ -143,12 +143,12 @@ onMounted(() => {
   controls.enablePan = false;
 
   dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath("/draco/");
+  dracoLoader.setDecoderPath("/models/draco/");
 
   const gltfLoader = new GLTFLoader();
   gltfLoader.setDRACOLoader(dracoLoader);
   gltfLoader.load(
-    "/kia_rio.glb",
+    "/models/kia_rio.glb",
     (gltf) => {
       const box = new THREE.Box3().setFromObject(gltf.scene);
       const center = box.getCenter(new THREE.Vector3());
@@ -233,13 +233,13 @@ onUnmounted(() => {
     </p>
     <div
       v-if="!modelLoading && !error"
-      class="absolute bottom-4 right-4 flex gap-2"
+      class="absolute bottom-4 right-4 flex flex-wrap justify-end gap-1.5"
       data-testid="car-viewer-controls"
     >
       <button
         type="button"
         aria-label="Girar a la izquierda"
-        class="icon-btn"
+        class="icon-btn h-11 w-11"
         @click="rotateLeft"
       >
         ↺
@@ -247,7 +247,7 @@ onUnmounted(() => {
       <button
         type="button"
         aria-label="Girar a la derecha"
-        class="icon-btn"
+        class="icon-btn h-11 w-11"
         @click="rotateRight"
       >
         ↻
@@ -255,7 +255,7 @@ onUnmounted(() => {
       <button
         type="button"
         aria-label="Alejar"
-        class="icon-btn"
+        class="icon-btn h-11 w-11"
         @click="zoomOut"
       >
         −
@@ -263,7 +263,7 @@ onUnmounted(() => {
       <button
         type="button"
         aria-label="Acercar"
-        class="icon-btn"
+        class="icon-btn h-11 w-11"
         @click="zoomIn"
       >
         +
@@ -271,7 +271,7 @@ onUnmounted(() => {
       <button
         type="button"
         aria-label="Oscurecer"
-        class="icon-btn"
+        class="icon-btn h-11 w-11"
         @click="dimLight"
       >
         🔅
@@ -279,7 +279,7 @@ onUnmounted(() => {
       <button
         type="button"
         aria-label="Aclarar"
-        class="icon-btn"
+        class="icon-btn h-11 w-11"
         @click="brightenLight"
       >
         🔆

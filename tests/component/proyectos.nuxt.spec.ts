@@ -18,7 +18,7 @@ const { queryCollectionMock } = vi.hoisted(() => {
       description: 'Aplicación para mostrar una Gameboy hecha con Vue y CSS puro, sin librerías de diseño externas.',
       stack: ['Vue', 'CSS'],
       url: 'https://gameboycsskr.netlify.app',
-      image: '/gameboycss.webp',
+      image: '/images/projects/gameboycss.webp',
       order: 1,
       featured: false
     }

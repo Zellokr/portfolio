@@ -11,7 +11,7 @@ describe('projectSchema', () => {
       description: 'Aplicación para mostrar una Gameboy hecha con Vue y CSS puro, sin librerías de diseño externas.',
       stack: ['Vue', 'CSS'],
       url: 'https://gameboycsskr.netlify.app',
-      image: '/gameboycss.webp',
+      image: '/images/projects/gameboycss.webp',
       order: 1,
       featured: false
     }
@@ -23,7 +23,7 @@ describe('projectSchema', () => {
       expect(result.data.slug).toBe('gameboycss')
       expect(result.data.stack).toEqual(['Vue', 'CSS'])
       expect(result.data.url).toBe('https://gameboycsskr.netlify.app')
-      expect(result.data.image).toBe('/gameboycss.webp')
+      expect(result.data.image).toBe('/images/projects/gameboycss.webp')
     }
   })
 

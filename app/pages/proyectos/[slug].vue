@@ -24,7 +24,7 @@ const siteUrl = useRuntimeConfig().public.siteUrl;
 const canonicalUrl = `${siteUrl}/proyectos/${slug}`;
 const ogImage = project.value.image
   ? `${siteUrl}${project.value.image}`
-  : `${siteUrl}/kristian.webp`;
+  : `${siteUrl}/images/kristian.webp`;
 
 useSeoMeta({
   title: `${project.value.title} — Proyectos`,
@@ -48,41 +48,65 @@ useHead({
 <template>
   <div>
     <NavBar :about="about ?? null" />
-    <section class="section border-b border-slate-800">
-      <div class="page-container max-w-3xl">
+    <section
+      class="section relative overflow-hidden border-b border-slate-800"
+    >
+      <div class="hero-glow" />
+      <div class="page-container max-w-4xl">
         <NuxtLink to="/proyectos" class="link-accent text-sm font-medium">
           ← Volver a proyectos
         </NuxtLink>
+        <p class="eyebrow mt-6">Proyecto</p>
         <h1
-          class="mt-6 text-3xl font-black tracking-tight text-white md:text-5xl"
+          class="mt-2 text-3xl font-black tracking-tight text-white md:text-5xl"
         >
           {{ project?.title }}
         </h1>
-        <div class="mt-4 flex flex-wrap gap-2">
+        <p class="mt-4 max-w-2xl text-lg leading-relaxed text-slate-300">
+          {{ project?.summary }}
+        </p>
+        <div class="mt-6 flex flex-wrap gap-2">
           <span v-for="tech in project?.stack" :key="tech" class="pill">
             {{ tech }}
           </span>
         </div>
-        <img
-          v-if="project?.image"
-          :src="project.image"
-          :alt="`Captura de ${project.title}`"
-          class="mt-8 w-full rounded-2xl border border-slate-800"
-        >
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a
+            v-if="project?.url"
+            :href="project.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-accent"
+          >
+            Ver proyecto en vivo
+          </a>
+          <a
+            v-if="project?.repo"
+            :href="project.repo"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="pill hover:border-accent hover:text-accent"
+          >
+            Ver código
+          </a>
+        </div>
+
         <div
-          class="mt-8 max-w-none text-lg leading-relaxed text-slate-300 [&>*+*]:mt-4"
+          v-if="project?.image"
+          class="mt-10 overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-800 to-slate-950"
+        >
+          <img
+            :src="project.image"
+            :alt="`Captura de ${project.title}`"
+            class="aspect-video w-full object-cover object-top"
+          >
+        </div>
+
+        <div
+          class="mt-10 rounded-2xl border border-slate-800 bg-slate-900/50 p-6 text-lg leading-relaxed text-slate-300 [&>*+*]:mt-4 sm:p-8"
         >
           <ContentRenderer v-if="project" :value="project" />
         </div>
-        <a
-          v-if="project?.url"
-          :href="project.url"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn-accent mt-8 inline-flex"
-        >
-          Ver proyecto en vivo
-        </a>
       </div>
     </section>
     <AppFooter :about="about ?? null" />

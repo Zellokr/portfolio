@@ -29,18 +29,15 @@ onMounted(() => {
   <article
     class="group flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/50 transition-colors duration-200 hover:border-accent"
   >
-    <a
-      :href="url"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="block h-72 overflow-hidden border-b border-slate-800 bg-gradient-to-br from-slate-800 to-slate-950"
+    <div
+      class="block aspect-video overflow-hidden border-b border-slate-800 bg-gradient-to-br from-slate-800 to-slate-950"
     >
       <img
         v-if="image && !imageFailed"
         ref="imageEl"
         :src="image"
         :alt="`Captura de ${title}`"
-        class="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+        class="h-full w-full object-cover object-top transition-transform duration-300"
         @error="imageFailed = true"
       >
       <span
@@ -50,7 +47,7 @@ onMounted(() => {
       >
         {{ title.slice(0, 2).toUpperCase() }}
       </span>
-    </a>
+    </div>
     <div class="flex flex-1 flex-col justify-between p-6">
       <div>
         <h3 class="text-xl font-bold tracking-tight text-white">
@@ -67,17 +64,19 @@ onMounted(() => {
           {{ summary }}
         </p>
       </div>
-      <div class="mt-6 flex flex-wrap items-center gap-2">
-        <span v-for="tech in stack" :key="tech" class="pill">
-          {{ tech }}
-        </span>
+      <div class="mt-6 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex flex-wrap gap-2">
+          <span v-for="tech in stack" :key="tech" class="pill">
+            {{ tech }}
+          </span>
+        </div>
+        <NuxtLink
+          :to="`/proyectos/${slug}`"
+          class="link-accent ml-auto shrink-0 text-sm font-semibold"
+        >
+          Ver detalles →
+        </NuxtLink>
       </div>
-      <NuxtLink
-        :to="`/proyectos/${slug}`"
-        class="link-accent mt-4 inline-flex text-sm font-semibold"
-      >
-        Ver detalles →
-      </NuxtLink>
     </div>
   </article>
 </template>

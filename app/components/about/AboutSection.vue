@@ -23,7 +23,7 @@ defineProps<{
         class="mt-6 flex flex-col items-center gap-10 text-center md:flex-row md:items-center md:text-left"
       >
         <img
-          src="/yo.webp"
+          src="/images/yo.webp"
           :alt="about?.name ? `Foto de ${about.name}` : 'Foto de perfil'"
           class="h-40 w-40 shrink-0 rounded-full border-2 border-accent/30 object-cover transition-transform duration-300 hover:scale-105 sm:h-48 sm:w-48"
         >

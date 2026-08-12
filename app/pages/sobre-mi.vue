@@ -36,7 +36,7 @@ const { data: hobbies, pending: hobbiesPending } = useAsyncData(
 
 const siteUrl = useRuntimeConfig().public.siteUrl;
 const canonicalUrl = `${siteUrl}/sobre-mi`;
-const ogImage = `${siteUrl}/kristian.webp`;
+const ogImage = `${siteUrl}/images/kristian.webp`;
 const pageTitle = computed(() =>
   about.value?.name ? `Sobre mí — ${about.value.name}` : "Sobre mí",
 );

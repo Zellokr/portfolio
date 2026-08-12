@@ -7,7 +7,7 @@ stack:
   - Nuxt
   - Vue
 url: https://www.vrsquads.com/
-image: /vrsquads.webp
+image: /images/projects/vrsquads.webp
 order: 2
 featured: false
 ---

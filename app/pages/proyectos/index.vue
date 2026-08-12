@@ -13,7 +13,7 @@ const { data: projects, pending: projectsPending } = useAsyncData(
 
 const siteUrl = useRuntimeConfig().public.siteUrl;
 const canonicalUrl = `${siteUrl}/proyectos`;
-const ogImage = `${siteUrl}/kristian.webp`;
+const ogImage = `${siteUrl}/images/kristian.webp`;
 const pageTitle = computed(() =>
   about.value?.name ? `Proyectos — ${about.value.name}` : "Proyectos",
 );

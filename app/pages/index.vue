@@ -22,7 +22,7 @@ const terminalProjects = computed<ProjectRef[]>(() =>
 
 const siteUrl = useRuntimeConfig().public.siteUrl;
 const canonicalUrl = `${siteUrl}/`;
-const ogImage = `${siteUrl}/kristian.webp`;
+const ogImage = `${siteUrl}/images/kristian.webp`;
 
 useSeoMeta({
   title: () => about.value?.headline ?? "Portfolio",
