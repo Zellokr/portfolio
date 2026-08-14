@@ -28,8 +28,13 @@ onMounted(() => {
 
 <template>
   <article
-    class="group flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/50 transition-colors duration-200 hover:border-accent"
+    class="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/50 transition-colors duration-200 hover:border-accent"
   >
+    <NuxtLink
+      :to="`/proyectos/${slug}`"
+      class="absolute inset-0 z-0"
+      :aria-label="`Ver detalles de ${title}`"
+    />
     <div
       class="block aspect-video overflow-hidden border-b border-slate-800 bg-gradient-to-br from-slate-800 to-slate-950"
     >
@@ -58,7 +63,7 @@ onMounted(() => {
             :href="url"
             target="_blank"
             rel="noopener noreferrer"
-            class="transition-colors duration-200 group-hover:text-accent"
+            class="relative z-10 transition-colors duration-200 group-hover:text-accent"
           >
             {{ title }}
           </a>
@@ -75,7 +80,7 @@ onMounted(() => {
         </div>
         <NuxtLink
           :to="`/proyectos/${slug}`"
-          class="link-accent ml-auto shrink-0 text-sm font-semibold"
+          class="link-accent relative z-10 ml-auto shrink-0 text-sm font-semibold"
         >
           Ver detalles →
         </NuxtLink>
