@@ -1,4 +1,5 @@
 import type { z } from 'zod'
+import { Redis } from '@upstash/redis'
 import type { agentSchema, aboutSchema, hobbySchema, projectSchema, technologySchema, timelineEntrySchema } from '../../content.schema'
 
 export type About = z.infer<typeof aboutSchema>
@@ -29,6 +30,47 @@ export function isRateLimited(log: Map<string, number[]>, id: string, now: numbe
   log.set(id, timestamps)
   return timestamps.length > RATE_LIMIT_MAX_REQUESTS
 }
+
+let redisClient: Redis | null | undefined
+
+/**
+ * Lazily creates the Upstash client from env vars. Returns null when they're
+ * absent (e.g. local dev) so callers can fall back to the in-memory limiter.
+ */
+function getRedisClient(): Redis | null {
+  if (redisClient !== undefined) return redisClient
+
+  const url = process.env.UPSTASH_REDIS_REST_URL
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN
+  redisClient = url && token ? new Redis({ url, token }) : null
+  return redisClient
+}
+
+/**
+ * Fixed-window rate limit backed by Upstash Redis, shared across every
+ * serverless instance. Unlike `isRateLimited`'s in-memory Map — which only
+ * sees traffic that lands on the same warm instance — this is the real
+ * boundary in production: `INCR` is atomic, so concurrent requests from the
+ * same id can't race past the limit, and `EXPIRE` on the first hit makes
+ * the window self-clearing without a background job.
+ *
+ * Falls back to the in-memory limiter when Redis isn't configured, which is
+ * fine for local dev (single process) but not a safe substitute in a
+ * multi-instance deployment.
+ */
+export async function isRateLimitedPersistent(id: string, now: number = Date.now()): Promise<boolean> {
+  const client = getRedisClient()
+  if (!client) return isRateLimited(fallbackRateLimitLog, id, now)
+
+  const key = `chat-rate-limit:${id}`
+  const count = await client.incr(key)
+  if (count === 1) {
+    await client.expire(key, Math.ceil(RATE_LIMIT_WINDOW_MS / 1000))
+  }
+  return count > RATE_LIMIT_MAX_REQUESTS
+}
+
+const fallbackRateLimitLog = new Map<string, number[]>()
 
 /**
  * Blocks direct/automated calls to the chat endpoint that don't come from

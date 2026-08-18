@@ -1,12 +1,10 @@
 import Groq from 'groq-sdk'
 import { queryCollection } from '@nuxt/content/server'
-import { buildSystemPrompt, isRateLimited, isTrustedOrigin, validateMessages } from '../utils/chat'
+import { buildSystemPrompt, isRateLimitedPersistent, isTrustedOrigin, validateMessages } from '../utils/chat'
 import type { About, Agent, Hobby, Project, Technology, TimelineEntry } from '../utils/chat'
 
 const MODEL = 'openai/gpt-oss-20b'
 const MAX_TOKENS = 1024
-
-const rateLimitLog = new Map<string, number[]>()
 
 export default defineEventHandler(async (event) => {
   if (!process.env.GROQ_API_KEY) {
@@ -20,7 +18,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const ip = getRequestIP(event, { xForwardedFor: true }) ?? 'unknown'
-  if (isRateLimited(rateLimitLog, ip)) {
+  if (await isRateLimitedPersistent(ip)) {
     throw createError({ statusCode: 429, statusMessage: 'Message limit reached. Please wait a few hours before trying again.' })
   }
 
