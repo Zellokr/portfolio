@@ -16,7 +16,10 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: {
         lang: 'es'
-      }
+      },
+      link: [
+        { rel: 'icon', type: 'image/webp', href: '/images/yo.webp' }
+      ]
     }
   },
   vite: {
