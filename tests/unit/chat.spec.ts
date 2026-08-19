@@ -1,12 +1,18 @@
 import { describe, expect, it } from 'vitest'
 import {
+  DEFAULT_GLOBAL_DAILY_MAX,
   MAX_MESSAGE_LENGTH,
   MAX_MESSAGES,
   RATE_LIMIT_MAX_REQUESTS,
   RATE_LIMIT_WINDOW_MS,
   buildSystemPrompt,
+  globalDailyMax,
   isRateLimited,
+  isRateLimitedPersistent,
   isTrustedOrigin,
+  refundGlobalDailyBudget,
+  refundRateLimit,
+  reserveGlobalDailyBudget,
   validateMessages
 } from '../../server/utils/chat'
 import type { About, Agent, Hobby, Project, Technology, TimelineEntry } from '../../server/utils/chat'
@@ -101,6 +107,63 @@ describe('isRateLimited', () => {
       isRateLimited(log, '1.2.3.4', 1000)
     }
     expect(isRateLimited(log, '1.2.3.4', 1000 + RATE_LIMIT_WINDOW_MS + 1)).toBe(false)
+  })
+})
+
+describe('globalDailyMax', () => {
+  it('defaults when the env var is unset or invalid', () => {
+    delete process.env.CHAT_GLOBAL_DAILY_MAX
+    expect(globalDailyMax()).toBe(DEFAULT_GLOBAL_DAILY_MAX)
+
+    process.env.CHAT_GLOBAL_DAILY_MAX = 'nonsense'
+    expect(globalDailyMax()).toBe(DEFAULT_GLOBAL_DAILY_MAX)
+
+    process.env.CHAT_GLOBAL_DAILY_MAX = '42'
+    expect(globalDailyMax()).toBe(42)
+
+    delete process.env.CHAT_GLOBAL_DAILY_MAX
+  })
+})
+
+describe('reserveGlobalDailyBudget (in-memory fallback)', () => {
+  it('allows requests up to the cap, then blocks', async () => {
+    process.env.CHAT_GLOBAL_DAILY_MAX = '2'
+    const now = Date.UTC(2030, 0, 1) // unique day => fresh bucket
+
+    expect(await reserveGlobalDailyBudget(now)).toBe(true)
+    expect(await reserveGlobalDailyBudget(now)).toBe(true)
+    expect(await reserveGlobalDailyBudget(now)).toBe(false)
+
+    delete process.env.CHAT_GLOBAL_DAILY_MAX
+  })
+
+  it('refund frees a reserved unit', async () => {
+    process.env.CHAT_GLOBAL_DAILY_MAX = '1'
+    const now = Date.UTC(2030, 0, 2) // a different unique day
+
+    expect(await reserveGlobalDailyBudget(now)).toBe(true)
+    expect(await reserveGlobalDailyBudget(now)).toBe(false)
+
+    await refundGlobalDailyBudget(now)
+    expect(await reserveGlobalDailyBudget(now)).toBe(true)
+
+    delete process.env.CHAT_GLOBAL_DAILY_MAX
+  })
+})
+
+describe('refundRateLimit (in-memory fallback)', () => {
+  it('gives back consumed slots so a refunded caller is under the limit again', async () => {
+    const id = 'refund-test-ip'
+    for (let i = 0; i < RATE_LIMIT_MAX_REQUESTS; i++) {
+      expect(await isRateLimitedPersistent(id, 2000)).toBe(false)
+    }
+    expect(await isRateLimitedPersistent(id, 2000)).toBe(true)
+
+    // Refund the over-limit request plus one served slot.
+    await refundRateLimit(id)
+    await refundRateLimit(id)
+
+    expect(await isRateLimitedPersistent(id, 2000)).toBe(false)
   })
 })
 

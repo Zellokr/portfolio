@@ -18,6 +18,9 @@ const messages = ref<ChatMessage[]>([])
 const inputValue = ref('')
 const isSending = ref(false)
 const errorText = ref('')
+// Set when the backend reports the assistant is unavailable (Groq quota spent
+// or the shared daily budget exhausted). Disables input until the page reloads.
+const unavailable = ref(false)
 const inputEl = ref<HTMLInputElement | null>(null)
 const scrollEl = ref<HTMLDivElement | null>(null)
 const usage = ref(loadChatUsage(window.localStorage))
@@ -50,13 +53,12 @@ watch(
 
 async function submit(): Promise<void> {
   const text = inputValue.value.trim()
-  if (!text || isSending.value || limitReached.value) return
+  if (!text || isSending.value || limitReached.value || unavailable.value) return
 
   errorText.value = ''
   messages.value.push({ role: 'user', content: text })
   inputValue.value = ''
   isSending.value = true
-  usage.value = recordChatMessage(window.localStorage, usage.value)
 
   try {
     const response = await $fetch<{ reply: string }>('/api/chat', {
@@ -64,11 +66,19 @@ async function submit(): Promise<void> {
       body: { messages: [...messages.value] },
     })
     messages.value.push({ role: 'assistant', content: response.reply })
+    // Only spend the visitor's allowance once the message is actually answered,
+    // so a failed send never burns one of their messages.
+    usage.value = recordChatMessage(window.localStorage, usage.value)
   } catch (error) {
     const statusCode = (error as { statusCode?: number })?.statusCode
-    errorText.value = statusCode === 429
-      ? 'Has alcanzado el límite de mensajes. Inténtalo de nuevo más tarde.'
-      : 'No se pudo enviar el mensaje. Inténtalo de nuevo en un momento.'
+    if (statusCode === 429) {
+      errorText.value = 'Has alcanzado el límite de mensajes. Inténtalo de nuevo más tarde.'
+    } else if (statusCode === 503) {
+      unavailable.value = true
+      errorText.value = 'El asistente no está disponible ahora mismo. Vuelve más tarde.'
+    } else {
+      errorText.value = 'No se pudo enviar el mensaje. Inténtalo de nuevo en un momento.'
+    }
   } finally {
     isSending.value = false
     nextTick(focusInput)
@@ -122,19 +132,25 @@ onMounted(focusInput)
         data-testid="chat-input"
         type="text"
         class="flex-1 bg-transparent text-gray-100 outline-none disabled:opacity-50"
-        :placeholder="limitReached ? 'Límite de mensajes alcanzado' : 'Escribe un mensaje…'"
+        :placeholder="
+          unavailable
+            ? 'Asistente no disponible'
+            : limitReached
+              ? 'Límite de mensajes alcanzado'
+              : 'Escribe un mensaje…'
+        "
         autocomplete="off"
         autocapitalize="off"
         spellcheck="false"
         aria-label="Chat message input"
-        :disabled="isSending || limitReached"
+        :disabled="isSending || limitReached || unavailable"
         @keydown.enter="submit"
       >
       <button
         type="button"
         data-testid="chat-send"
         class="pill hover:border-accent hover:text-accent disabled:opacity-50"
-        :disabled="isSending || limitReached || !inputValue.trim()"
+        :disabled="isSending || limitReached || unavailable || !inputValue.trim()"
         @click="submit"
       >
         Enviar

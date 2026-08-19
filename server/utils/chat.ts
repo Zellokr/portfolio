@@ -14,6 +14,21 @@ export const MAX_MESSAGE_LENGTH = 2000
 export const RATE_LIMIT_WINDOW_MS = 5 * 60 * 60 * 1000
 export const RATE_LIMIT_MAX_REQUESTS = 5
 
+/**
+ * Shared daily ceiling across ALL visitors. The per-IP limit above is a
+ * fairness guard (one visitor can't monopolize); this is the real capacity
+ * boundary that protects the Groq account quota, so a busy day can't leave
+ * later visitors with a chat that promises messages it can't deliver.
+ * Override with `CHAT_GLOBAL_DAILY_MAX`; it's a request-count proxy for Groq's
+ * token-based quota, so keep it conservatively below the real limit.
+ */
+export const DEFAULT_GLOBAL_DAILY_MAX = 500
+
+export function globalDailyMax(): number {
+  const value = Number(process.env.CHAT_GLOBAL_DAILY_MAX)
+  return Number.isFinite(value) && value > 0 ? value : DEFAULT_GLOBAL_DAILY_MAX
+}
+
 export interface ChatMessage {
   role: 'user' | 'assistant'
   content: string
@@ -71,6 +86,84 @@ export async function isRateLimitedPersistent(id: string, now: number = Date.now
 }
 
 const fallbackRateLimitLog = new Map<string, number[]>()
+
+/**
+ * Refunds one previously-counted request for `id`. Called when a request was
+ * counted against the per-IP limiter but never actually served (e.g. the
+ * assistant was unavailable), so a failed attempt doesn't burn the visitor's
+ * quota. Best-effort: never throws.
+ */
+export async function refundRateLimit(id: string): Promise<void> {
+  const client = getRedisClient()
+  if (!client) {
+    const timestamps = fallbackRateLimitLog.get(id)
+    if (timestamps && timestamps.length > 0) {
+      timestamps.pop()
+      fallbackRateLimitLog.set(id, timestamps)
+    }
+    return
+  }
+  await client.decr(`chat-rate-limit:${id}`)
+}
+
+function globalDailyKey(now: number): string {
+  // UTC day: a single shared bucket regardless of which serverless instance
+  // handles the request.
+  return `chat-global-daily:${new Date(now).toISOString().slice(0, 10)}`
+}
+
+let fallbackGlobalDaily: { day: string; count: number } | null = null
+
+/**
+ * Atomically reserves one unit of the shared daily budget. Returns `true` when
+ * the reservation is within budget (safe to call Groq) and `false` when the
+ * global daily cap is already spent — in which case the reservation is rolled
+ * back so the stored counter never drifts above the cap.
+ *
+ * Falls back to a per-instance in-memory counter when Redis isn't configured;
+ * that only guards a single dev process, which is all local dev needs.
+ */
+export async function reserveGlobalDailyBudget(now: number = Date.now()): Promise<boolean> {
+  const max = globalDailyMax()
+  const client = getRedisClient()
+
+  if (!client) {
+    const day = globalDailyKey(now)
+    if (!fallbackGlobalDaily || fallbackGlobalDaily.day !== day) {
+      fallbackGlobalDaily = { day, count: 0 }
+    }
+    if (fallbackGlobalDaily.count >= max) return false
+    fallbackGlobalDaily.count += 1
+    return true
+  }
+
+  const key = globalDailyKey(now)
+  const count = await client.incr(key)
+  if (count === 1) {
+    await client.expire(key, 60 * 60 * 25)
+  }
+  if (count > max) {
+    await client.decr(key)
+    return false
+  }
+  return true
+}
+
+/**
+ * Refunds one unit of the shared daily budget. Called when a reservation was
+ * made but the request was never served (e.g. Groq failed), so a failed
+ * attempt doesn't count against the global cap. Best-effort: never throws.
+ */
+export async function refundGlobalDailyBudget(now: number = Date.now()): Promise<void> {
+  const client = getRedisClient()
+  if (!client) {
+    if (fallbackGlobalDaily && fallbackGlobalDaily.count > 0) {
+      fallbackGlobalDaily.count -= 1
+    }
+    return
+  }
+  await client.decr(globalDailyKey(now))
+}
 
 /**
  * Blocks direct/automated calls to the chat endpoint that don't come from
