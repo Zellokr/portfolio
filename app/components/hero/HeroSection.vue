@@ -1,20 +1,30 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import type { About } from "~/composables/useAbout";
 import WindowChrome from "~/components/WindowChrome/WindowChrome.vue";
+import GeoBackdrop from "~/components/ui/GeoBackdrop.vue";
 import TerminalApp from "~/components/terminal/TerminalApp.client.vue";
 import ChatApp from "~/components/chat/ChatApp.client.vue";
 import TerminalSkeleton from "~/components/terminal/TerminalSkeleton.vue";
 import HeroTextSkeleton from "./HeroTextSkeleton.vue";
 import type { ProjectRef } from "~/utils/terminal/types";
 
-defineProps<{
+const props = defineProps<{
   about: About | null;
   projects: ProjectRef[];
   pending?: boolean;
 }>();
 
 const mode = ref<"terminal" | "chat">("terminal");
+
+// The headline is authored as a pipe-separated list of roles/stacks.
+// Surface each segment as a compact monospace tag instead of one long line.
+const roleTags = computed(() =>
+  (props.about?.headline ?? "")
+    .split("|")
+    .map((segment) => segment.trim())
+    .filter(Boolean),
+);
 </script>
 
 <template>
@@ -23,25 +33,43 @@ const mode = ref<"terminal" | "chat">("terminal");
     aria-label="Hero"
     class="relative flex min-h-svh items-center overflow-hidden border-b border-slate-800 py-24 md:py-28"
   >
-    <div class="hero-glow" />
+    <GeoBackdrop axis />
+
     <div
-      class="page-container grid items-center gap-12 lg:grid-cols-2 lg:gap-24"
+      class="page-container relative grid w-full items-center gap-y-12 gap-x-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-x-16"
     >
-      <HeroTextSkeleton v-if="pending" />
-      <div v-else>
-        <p class="text-lg font-semibold text-accent">👋 ¡Hola! Soy</p>
+      <HeroTextSkeleton v-if="pending" class="lg:-mt-10" />
+      <div v-else class="hero-intro lg:-mt-10">
+        <p class="hero-intro-item text-sm font-semibold tracking-wide text-accent">
+          <span aria-hidden="true">👋</span> ¡Hola! Soy
+        </p>
+        <!-- No entrance animation on the LCP element: keeping it at opacity 1
+             from first paint avoids delaying Largest Contentful Paint. -->
         <h1
-          class="mt-4 text-5xl font-black tracking-tight text-white md:text-7xl"
+          class="mt-3 text-5xl font-black leading-[1.05] tracking-tight text-white md:text-7xl"
         >
           {{ about?.name }}
         </h1>
+        <ul
+          v-if="roleTags.length"
+          class="hero-intro-item mt-5 flex flex-wrap gap-2"
+          aria-label="Roles y stack"
+        >
+          <li
+            v-for="tag in roleTags"
+            :key="tag"
+            class="pill font-mono text-[11px] tracking-tight"
+          >
+            {{ tag }}
+          </li>
+        </ul>
         <p
           v-if="about?.bio"
-          class="mt-4 max-w-xl text-base leading-relaxed text-slate-400"
+          class="hero-intro-item mt-5 max-w-xl text-base leading-relaxed text-slate-400"
         >
           {{ about.bio }}
         </p>
-        <div class="mt-8 flex flex-wrap gap-3">
+        <div class="hero-intro-item mt-8 flex flex-wrap gap-3">
           <a
             v-if="about?.email"
             :href="`mailto:${about.email}`"
@@ -70,13 +98,34 @@ const mode = ref<"terminal" | "chat">("terminal");
             Descargar CV
           </a>
         </div>
+        <p
+          v-if="about?.location"
+          class="hero-intro-item mt-6 flex items-center gap-1.5 text-sm text-slate-500"
+        >
+          <svg
+            viewBox="0 0 20 20"
+            class="h-4 w-4 text-accent"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 2a5.5 5.5 0 0 0-5.5 5.5c0 3.6 4.35 8.34 5.02 9.05a.66.66 0 0 0 .96 0c.67-.71 5.02-5.45 5.02-9.05A5.5 5.5 0 0 0 10 2Zm0 7.5a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          {{ about.location }}
+        </p>
       </div>
-      <div>
+      <div class="hero-panel min-w-0 lg:mt-16">
         <div
-          class="mb-3 inline-flex rounded-lg border border-slate-800 bg-slate-900/60 p-1 text-xs font-medium"
+          class="mb-3 inline-flex gap-1 rounded-lg border border-slate-800 bg-slate-900/60 p-1 text-xs font-medium"
+          role="group"
+          aria-label="Modo de interacción"
         >
           <button
             type="button"
+            :aria-pressed="mode === 'terminal'"
             class="rounded-md px-3 py-1.5 transition-colors duration-200"
             :class="
               mode === 'terminal'
@@ -89,6 +138,7 @@ const mode = ref<"terminal" | "chat">("terminal");
           </button>
           <button
             type="button"
+            :aria-pressed="mode === 'chat'"
             class="rounded-md px-3 py-1.5 transition-colors duration-200"
             :class="
               mode === 'chat'
@@ -130,5 +180,54 @@ const mode = ref<"terminal" | "chat">("terminal");
 .mode-fade-enter-from,
 .mode-fade-leave-to {
   opacity: 0;
+}
+
+/* Staged entrance for the intro block: animate transform + opacity only. */
+.hero-intro-item {
+  opacity: 0;
+  animation: hero-rise 0.5s ease forwards;
+}
+
+.hero-intro-item:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.hero-intro-item:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.hero-intro-item:nth-child(3) {
+  animation-delay: 0.19s;
+}
+.hero-intro-item:nth-child(4) {
+  animation-delay: 0.26s;
+}
+.hero-intro-item:nth-child(5) {
+  animation-delay: 0.33s;
+}
+.hero-intro-item:nth-child(6) {
+  animation-delay: 0.4s;
+}
+
+.hero-panel {
+  opacity: 0;
+  animation: hero-rise 0.5s ease 0.2s forwards;
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-intro-item,
+  .hero-panel {
+    animation: none;
+    opacity: 1;
+  }
 }
 </style>

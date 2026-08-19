@@ -18,14 +18,17 @@ defineProps<{
     <div class="hero-glow" />
     <div class="page-container">
       <p class="eyebrow">Proyectos</p>
-      <h1 class="mt-2 text-3xl font-black tracking-tight text-white md:text-5xl">
-        Cosas que construyo por diversión
-      </h1>
+      <div class="inline-block max-w-2xl">
+        <h1 class="mt-2 text-4xl font-black tracking-tight text-white md:text-6xl">
+          Cosas que construyo por diversión
+        </h1>
+        <div class="mt-5 h-px w-full bg-accent/40" aria-hidden="true" />
+      </div>
       <p class="mt-6 max-w-2xl text-lg leading-relaxed text-slate-300">
         Proyectos personales que hago por diversión y para seguir aprendiendo cosas nuevas.
       </p>
-      <ProjectGridSkeleton v-if="pending" class="mt-8" />
-      <div v-else class="mt-8 grid gap-6 md:grid-cols-2">
+      <ProjectGridSkeleton v-if="pending" class="mt-10" />
+      <div v-else class="reveal mt-10 grid gap-6 md:grid-cols-2">
         <ProjectCard
           v-for="(project, index) in projects"
           :key="project.slug"

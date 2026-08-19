@@ -20,7 +20,14 @@ export const projectSchema = z.object({
   image: z.string().optional(),
   repo: z.string().url().optional(),
   order: z.number().default(0),
-  featured: z.boolean().default(false)
+  featured: z.boolean().default(false),
+  // Optional case-study fields. When present, the detail page renders a
+  // structured "problem → approach → highlights" narrative above the body.
+  role: z.string().optional(),
+  year: z.string().optional(),
+  problem: z.string().optional(),
+  approach: z.string().optional(),
+  highlights: z.array(z.string()).default([])
 })
 
 export const aboutSchema = z.object({

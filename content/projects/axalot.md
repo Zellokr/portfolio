@@ -12,6 +12,14 @@ image: /images/projects/axalot.webp
 repo: https://github.com/Zellokr/axalot
 order: 4
 featured: false
+problem: "Dar a un agente de IA la capacidad de operar sobre permisos sensibles sin que pueda conceder o revocar accesos por su cuenta."
+approach: "El agente (Groq, con streaming en tiempo real) consulta y propone cambios, pero toda concesión o revocación pasa por un motor de políticas determinista en TypeScript; los recursos sensibles exigen aprobación humana explícita y cada acción queda registrada."
+highlights:
+  - "Motor de políticas determinista en TypeScript que decide cada cambio"
+  - "Agente de IA con Groq y streaming en tiempo real"
+  - "Aprobación humana obligatoria para recursos sensibles"
+  - "Registro de auditoría de cada acción, del agente y del administrador"
+  - "Backend en tiempo real con Convex"
 ---
 
 Consola de IAM donde un agente de IA (Groq, con streaming en tiempo real) puede

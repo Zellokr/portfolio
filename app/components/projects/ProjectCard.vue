@@ -28,7 +28,7 @@ onMounted(() => {
 
 <template>
   <article
-    class="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/50 transition-colors duration-200 hover:border-accent"
+    class="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/50 transition duration-200 hover:border-accent hover:bg-slate-900/80 motion-safe:hover:-translate-y-1"
   >
     <NuxtLink
       :to="`/proyectos/${slug}`"
@@ -45,7 +45,7 @@ onMounted(() => {
         :alt="`Captura de ${title}`"
         :loading="priority ? undefined : 'lazy'"
         :fetchpriority="priority ? 'high' : undefined"
-        class="h-full w-full object-cover object-top transition-transform duration-300"
+        class="h-full w-full object-cover object-top"
         @error="imageFailed = true"
       >
       <span

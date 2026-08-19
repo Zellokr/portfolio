@@ -5,8 +5,54 @@
 }
 
 @layer base {
+  :root {
+    /* Dark-first: native UI (scrollbars, form controls) follows the theme. */
+    color-scheme: dark;
+    --scrollbar-thumb: #3f4a5f;
+    --scrollbar-thumb-hover: var(--color-accent);
+  }
+
   body {
     @apply bg-slate-950 text-slate-300 antialiased;
+  }
+
+  /* Standard, Baseline scrollbar styling. Inherits to nested scrollers. */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+  }
+
+  /* Terminal has a darker surface: give it a slightly cooler grey thumb. */
+  .terminal-scroll {
+    scrollbar-color: #4b5563 transparent;
+  }
+}
+
+/* Fallback for browsers without scrollbar-color (e.g. older Safari). */
+@supports not (scrollbar-color: auto) {
+  html::-webkit-scrollbar,
+  .terminal-scroll::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  html::-webkit-scrollbar-track,
+  .terminal-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  html::-webkit-scrollbar-thumb,
+  .terminal-scroll::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border: 2px solid transparent;
+    border-radius: 9999px;
+    background-clip: content-box;
+  }
+
+  html::-webkit-scrollbar-thumb:hover,
+  .terminal-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+    background-clip: content-box;
   }
 }
 
@@ -43,6 +89,10 @@
     @apply flex h-9 w-9 items-center justify-center rounded-lg border border-slate-800 bg-slate-900 text-slate-300 transition-colors duration-200 hover:border-accent hover:text-accent active:scale-[0.98];
   }
 
+  .card {
+    @apply rounded-2xl border border-slate-800 bg-slate-900/50 transition duration-200 hover:border-accent hover:bg-slate-900/80;
+  }
+
   .nav-link {
     @apply text-sm font-medium text-slate-300 transition-colors duration-200 hover:text-accent;
   }
@@ -55,6 +105,14 @@
     background: radial-gradient(circle at 15% 20%, oklch(0.75 0.17 70 / 18%), transparent 60%);
   }
 
+  /* Subtle film grain for depth/texture. Decorative, low opacity. */
+  .grain {
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+  }
+
   .page-enter-active,
   .page-leave-active {
     transition: opacity 0.2s ease;
@@ -63,5 +121,33 @@
   .page-enter-from,
   .page-leave-to {
     opacity: 0;
+  }
+}
+
+/*
+ * Scroll-linked reveal. Fully degradable: the hidden initial state only
+ * applies when scroll-driven animations are supported AND the user has not
+ * requested reduced motion. Without support or with reduced motion, `.reveal`
+ * elements render immediately at full opacity (no JS, SSR-safe).
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

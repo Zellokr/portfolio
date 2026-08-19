@@ -18,7 +18,7 @@ defineProps<{
       :href="tech.url"
       target="_blank"
       rel="noopener noreferrer"
-      class="group flex flex-col items-center gap-3 rounded-2xl border border-slate-800 bg-slate-900/50 p-6 transition-colors duration-200 hover:border-accent"
+      class="card group flex flex-col items-center gap-3 p-6 motion-safe:hover:-translate-y-1"
     >
       <img
         :src="tech.icon"

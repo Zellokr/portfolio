@@ -11,7 +11,11 @@ defineExpose({ containerEl })
 </script>
 
 <template>
-  <div ref="containerEl" class="flex-1 overflow-y-auto" data-testid="terminal-output">
+  <div
+    ref="containerEl"
+    class="terminal-scroll flex-1 overflow-y-auto [scrollbar-gutter:stable]"
+    data-testid="terminal-output"
+  >
     <TerminalLine v-for="line in lines" :key="line.id" :line="line" />
   </div>
 </template>

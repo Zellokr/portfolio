@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted, ref } from "vue";
 import CarViewerSkeleton from "./CarViewerSkeleton.vue";
+import SectionHeader from "./SectionHeader.vue";
 
 const CarViewer = defineAsyncComponent({
   loader: () => import("./CarViewer.client.vue"),
@@ -37,12 +38,11 @@ onMounted(() => {
     class="section border-b border-slate-800"
   >
     <div class="page-container">
-      <h2 class="section-heading">Mi coche: KIA Rio 2019</h2>
-      <p class="mt-3 max-w-2xl text-slate-400">
-        Otra de mis pasiones fuera del código, los coches, puedes interactuar
-        con el coche en 3D, rotarlo, hacer zoom y ver los detalles.
-      </p>
-      <div ref="wrapperEl" class="mt-8">
+      <SectionHeader
+        title="Mi coche: KIA Rio 2019"
+        description="Otra de mis pasiones fuera del código, los coches, puedes interactuar con el coche en 3D, rotarlo, hacer zoom y ver los detalles."
+      />
+      <div ref="wrapperEl" class="reveal mt-8">
         <CarViewerSkeleton v-if="!visible" />
         <ClientOnly v-else>
           <CarViewer />

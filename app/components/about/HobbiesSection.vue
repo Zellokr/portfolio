@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import HobbyCard from './HobbyCard.vue'
 import HobbyGridSkeleton from './HobbyGridSkeleton.vue'
+import SectionHeader from './SectionHeader.vue'
 import type { Hobby } from '~/composables/useHobbies'
 
 defineProps<{
@@ -12,9 +13,9 @@ defineProps<{
 <template>
   <section id="aficiones" aria-label="Hobbies" class="section border-b border-slate-800">
     <div class="page-container">
-      <h2 class="section-heading">Aficiones</h2>
+      <SectionHeader title="Aficiones" />
       <HobbyGridSkeleton v-if="pending" />
-      <div v-else class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div v-else class="reveal mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <HobbyCard
           v-for="hobby in hobbies"
           :key="hobby.name"

@@ -1,11 +1,20 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import type { About } from "~/composables/useAbout";
 import AboutSectionSkeleton from "./AboutSectionSkeleton.vue";
 
-defineProps<{
+const props = defineProps<{
   about: About | null;
   pending?: boolean;
 }>();
+
+// Mirror the hero: render the pipe-separated headline as compact monospace tags.
+const roleTags = computed(() =>
+  (props.about?.headline ?? "")
+    .split("|")
+    .map((segment) => segment.trim())
+    .filter(Boolean),
+);
 </script>
 
 <template>
@@ -22,19 +31,39 @@ defineProps<{
         v-else
         class="mt-6 flex flex-col items-center gap-10 text-center md:flex-row md:items-center md:text-left"
       >
-        <img
-          src="/images/yo.webp"
-          :alt="about?.name ? `Foto de ${about.name}` : 'Foto de perfil'"
-          fetchpriority="high"
-          class="h-40 w-40 shrink-0 rounded-full border-2 border-accent/30 object-cover transition-transform duration-300 hover:scale-105 sm:h-48 sm:w-48"
-        >
+        <div class="relative shrink-0">
+          <span
+            class="pointer-events-none absolute -inset-3 -z-10 rounded-full border border-accent/20"
+            aria-hidden="true"
+          />
+          <span
+            class="pointer-events-none absolute -right-2 -bottom-2 h-16 w-16 rounded-full border border-accent/25"
+            aria-hidden="true"
+          />
+          <img
+            src="/images/yo.webp"
+            :alt="about?.name ? `Foto de ${about.name}` : 'Foto de perfil'"
+            fetchpriority="high"
+            class="h-40 w-40 rounded-full border-2 border-accent/30 object-cover transition-transform duration-300 hover:scale-105 sm:h-48 sm:w-48"
+          >
+        </div>
         <div>
           <h1 class="text-3xl font-black tracking-tight text-white md:text-5xl">
             {{ about?.name }}
           </h1>
-          <p class="mt-2 text-lg text-accent">
-            {{ about?.headline }}
-          </p>
+          <ul
+            v-if="roleTags.length"
+            class="mt-4 flex flex-wrap justify-center gap-2 md:justify-start"
+            aria-label="Roles y stack"
+          >
+            <li
+              v-for="tag in roleTags"
+              :key="tag"
+              class="pill font-mono text-[11px] tracking-tight"
+            >
+              {{ tag }}
+            </li>
+          </ul>
           <p class="mt-6 max-w-2xl text-lg leading-relaxed text-slate-300">
             {{ about?.bio }}
           </p>
